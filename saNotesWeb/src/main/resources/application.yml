@@ -3,3 +3,23 @@ spring:
     mongodb:
       database: notes
       port: 27017
+  datasource:
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+
+
+logging:
+  level:
+    org:
+      springframework: INFO
+    root: ERROR
+  pattern:
+    console: %-5level %logger{36} - %msg%n
+
