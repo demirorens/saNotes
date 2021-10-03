@@ -1,0 +1,5 @@
+spring:
+  data:
+    mongodb:
+      database: notes
+      port: 27017
