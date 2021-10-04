@@ -7,8 +7,9 @@ spring:
     hikari:
       connectionTimeout: 20000
       maximumPoolSize: 5
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://localhost:5432/notebooks
     username: postgres
+    password: password
   jpa:
     hibernate:
       ddl-auto: create
@@ -20,6 +21,5 @@ logging:
     org:
       springframework: INFO
     root: ERROR
-  pattern:
-    console: %-5level %logger{36} - %msg%n
+
 
