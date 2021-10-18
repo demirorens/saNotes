@@ -1,4 +1,4 @@
-package com.sanotes.saNotesPostgres.Service;
+package com.sanotes.saNotesWeb.Service;
 
 import com.sanotes.saNotesPostgres.Service.DAO.NoteBookRepository;
 import com.sanotes.saNotesPostgres.Service.DAO.NoteTagsRepository;
@@ -14,29 +14,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class NoteBookService {
-
-    @Autowired
-    NoteBookRepository noteBookRepository;
-
-    @Autowired
-    NotesRepository notesRepository;
+public class TagService {
 
     @Autowired
     NoteTagsRepository noteTagsRepository;
 
     @Autowired
     TagRepository  tagRepository;
-
-    public NoteBookModel saveNoteBook(NoteBookModel noteBookModel){
-
-        return noteBookRepository.save(noteBookModel);
-    }
-
-    public List<NoteBookModel> getNoteBooks(){
-
-        return (List<NoteBookModel>) noteBookRepository.findAll();
-    }
 
     public TagModel saveTag(TagModel tagModel){
 
@@ -46,16 +30,6 @@ public class NoteBookService {
     public List<TagModel> getTags(){
 
         return (List<TagModel>) tagRepository.findAll();
-    }
-
-    public NotesModel saveNotes(NotesModel notesModel){
-
-        return notesRepository.save(notesModel);
-    }
-
-    public List<NotesModel> getNotes(){
-
-        return (List<NotesModel>) notesRepository.findAll();
     }
 
     public NoteTagsModel saveNoteTags(NoteTagsModel noteTagsModel){

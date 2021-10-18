@@ -1,3 +1,5 @@
+import React from 'react';
+import { RestClient } from '../client/RestClient';
 import { Button, Dropdown, Menu,message } from 'antd';
 import Notebooks from "./Notebooks";
 import Tags from "./Tags";
@@ -5,34 +7,49 @@ import {
     BookOutlined,
     TagsOutlined,
     DownOutlined,
-    UserOutlined
+    UserOutlined,
+    TagOutlined,
+    HddOutlined,
+    FileAddOutlined,
+    CheckOutlined
 } from '@ant-design/icons';
+
+
 
 
 const menu = (
     <Menu onClick={handleMenuClick}>
-      <Menu.Item key="1" icon={<UserOutlined />}>
-        1st menu item
-      </Menu.Item>
-      <Menu.Item key="2" icon={<UserOutlined />}>
-        2nd menu item
-      </Menu.Item>
-      <Menu.Item key="3" icon={<UserOutlined />}>
-        3rd menu item
-      </Menu.Item>
+        <Menu.Item key="newNote" icon={<FileAddOutlined />}>
+            Note
+        </Menu.Item>
+        <Menu.Item key="newToDo" icon={<CheckOutlined />}>
+            TODO
+        </Menu.Item>
     </Menu>
-  );
+);
 
-  function handleMenuClick(e:any) {
-    message.info('Click on menu item.');
+function handleMenuClick(e:any) {
+    message.info('Click on menu item: '+ e.key);
     console.log('click', e);
-  }
+}
+
 
 
 function MenuSA(){
+
+    let [notebooks, setNoteBooks] = React.useState<Array<any>>([])
+    let [tags, setTags] = React.useState<Array<any>>([])
+       
+    React.useEffect(() => {
+        RestClient.getNoteBooks()
+                    .then(notebooks => setNoteBooks(notebooks))
+        RestClient.getTags()
+                    .then(tags => setTags(tags))
+    }, [])
+
     return(
         <div className="MenuSA">
-            <Menu
+            <Menu onClick={handleMenuClick}
                 mode="inline"
                 theme="dark"
             >
@@ -43,16 +60,18 @@ function MenuSA(){
                     </Button>
                 </Dropdown>
                 <Menu.SubMenu key="notebooks" icon={<BookOutlined />} title="Note Books">
-                    <Menu.Item key="4">Book1</Menu.Item>
-                    <Menu.Item key="5">Book2</Menu.Item>
-                    <Menu.Item key="6">Book3</Menu.Item>
+                    {notebooks.map((notebook: any, i: number) =>
+                        <Menu.Item key={"noteBook_"+notebook.id} icon={<BookOutlined />}>{notebook.name}</Menu.Item>
+                    )}
+                    <Menu.Item key="newNoteBook" icon={<BookOutlined />} style={{color:'green'}}><span>+ New Note Book</span></Menu.Item>
                 </Menu.SubMenu> 
                 <Menu.SubMenu key="tags" icon={<TagsOutlined />} title="Tags">
-                    <Menu.Item key="7">Book1</Menu.Item>
-                    <Menu.Item key="8">Book2</Menu.Item>
-                    <Menu.Item key="9">Book3</Menu.Item>
+                    {tags.map((tag: any, i: number) =>
+                        <Menu.Item key={"tag_"+tag.id} icon={<TagOutlined />}>{tag.name}</Menu.Item>
+                    )}
+                    <Menu.Item key="newTag" icon={<TagOutlined />} style={{color:'green'}}><span>+ New Tag</span></Menu.Item>
                 </Menu.SubMenu> 
-                <Menu.Item key="10">Arşiv</Menu.Item> 
+                <Menu.Item key="Archive" icon={<HddOutlined />}>Archive</Menu.Item> 
                                
             </Menu>
         </div>

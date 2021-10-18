@@ -1,6 +1,6 @@
 export class RestClient {
 
-    static baseUrl = "http://localhost:8080"
+    static baseUrl = "http://localhost:8080/api"
 
     static async getNoteBooks() : Promise<any> {
         const url = `${RestClient.baseUrl}/notebooks`

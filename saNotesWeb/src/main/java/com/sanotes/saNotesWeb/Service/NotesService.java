@@ -1,4 +1,4 @@
-package com.sanotes.saNotesMongo;
+package com.sanotes.saNotesWeb.Service;
 
 import com.sanotes.saNotesMongo.DAO.NoteRepository;
 import com.sanotes.saNotesMongo.Model.NoteModel;
@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class NotesService {
@@ -22,5 +23,9 @@ public class NotesService {
     public List<NoteModel> getNotes(){
 
         return noteRepository.findAll();
+    }
+
+    public Optional<NoteModel> getNote(String id){
+        return noteRepository.findById(id);
     }
 }

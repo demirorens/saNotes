@@ -1,9 +1,9 @@
 package com.sanotes.saNotesWeb.Controller;
 
 import com.sanotes.saNotesMongo.Model.NoteModel;
-import com.sanotes.saNotesMongo.NotesService;
+import com.sanotes.saNotesWeb.Service.NotesService;
 import com.sanotes.saNotesPostgres.Service.Model.NoteBookModel;
-import com.sanotes.saNotesPostgres.Service.NoteBookService;
+import com.sanotes.saNotesWeb.Service.NoteBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +38,7 @@ public class Deneme {
     }
 
     @GetMapping("notebooks")
-    public List<NoteBookModel> getNoteBooks(){
+    public Iterable<NoteBookModel> getNoteBooks(){
         return noteBookService.getNoteBooks();
     }
 

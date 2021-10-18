@@ -10,7 +10,7 @@ function App() {
   return (
     <div className="App">
       <Layout>
-        <Sider
+        <Sider width={250}
           breakpoint="lg"
           collapsedWidth="0"
           onBreakpoint={broken => {
