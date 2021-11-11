@@ -1,7 +1,7 @@
-package com.sanotes.saNotesWeb.Service;
+package com.sanotes.saNotesWeb.service;
 
 import com.sanotes.saNotesMongo.DAO.NoteRepository;
-import com.sanotes.saNotesMongo.Model.NoteModel;
+import com.sanotes.saNotesMongo.model.NoteModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

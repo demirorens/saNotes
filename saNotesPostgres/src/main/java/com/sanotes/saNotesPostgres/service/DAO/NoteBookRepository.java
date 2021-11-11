@@ -1,6 +1,6 @@
-package com.sanotes.saNotesPostgres.Service.DAO;
+package com.sanotes.saNotesPostgres.service.DAO;
 
-import com.sanotes.saNotesPostgres.Service.Model.NoteBookModel;
+import com.sanotes.saNotesPostgres.service.model.NoteBookModel;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

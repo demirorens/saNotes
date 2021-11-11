@@ -1,4 +1,4 @@
-package com.sanotes.saNotesPostgres.Service.Model;
+package com.sanotes.saNotesPostgres.service.model;
 
 import javax.persistence.*;
 

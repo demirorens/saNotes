@@ -1,9 +1,9 @@
-package com.sanotes.saNotesWeb.Service;
+package com.sanotes.saNotesWeb.service;
 
-import com.sanotes.saNotesPostgres.Service.DAO.NoteBookRepository;
-import com.sanotes.saNotesPostgres.Service.DAO.NotesRepository;
-import com.sanotes.saNotesPostgres.Service.Model.NoteBookModel;
-import com.sanotes.saNotesPostgres.Service.Model.NotesModel;
+import com.sanotes.saNotesPostgres.service.DAO.NoteBookRepository;
+import com.sanotes.saNotesPostgres.service.DAO.NotesRepository;
+import com.sanotes.saNotesPostgres.service.model.NoteBookModel;
+import com.sanotes.saNotesPostgres.service.model.NotesModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

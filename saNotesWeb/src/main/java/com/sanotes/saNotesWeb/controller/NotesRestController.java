@@ -1,10 +1,10 @@
-package com.sanotes.saNotesWeb.Controller;
+package com.sanotes.saNotesWeb.controller;
 
-import com.sanotes.saNotesPostgres.Service.Model.NoteBookModel;
-import com.sanotes.saNotesPostgres.Service.Model.TagModel;
-import com.sanotes.saNotesWeb.Service.NoteBookService;
-import com.sanotes.saNotesWeb.Service.NotesService;
-import com.sanotes.saNotesWeb.Service.TagService;
+import com.sanotes.saNotesPostgres.service.model.NoteBookModel;
+import com.sanotes.saNotesPostgres.service.model.TagModel;
+import com.sanotes.saNotesWeb.service.NoteBookService;
+import com.sanotes.saNotesWeb.service.NotesService;
+import com.sanotes.saNotesWeb.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

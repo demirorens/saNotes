@@ -1,9 +1,9 @@
-package com.sanotes.saNotesWeb.Controller;
+package com.sanotes.saNotesWeb.controller;
 
-import com.sanotes.saNotesMongo.Model.NoteModel;
-import com.sanotes.saNotesWeb.Service.NotesService;
-import com.sanotes.saNotesPostgres.Service.Model.NoteBookModel;
-import com.sanotes.saNotesWeb.Service.NoteBookService;
+import com.sanotes.saNotesMongo.model.NoteModel;
+import com.sanotes.saNotesWeb.service.NotesService;
+import com.sanotes.saNotesPostgres.service.model.NoteBookModel;
+import com.sanotes.saNotesWeb.service.NoteBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
