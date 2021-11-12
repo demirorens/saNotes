@@ -1,5 +1,6 @@
 package com.sanotes.saNotesWeb.controller;
 
+import com.sanotes.saNotesMongo.model.NotModel;
 import com.sanotes.saNotesPostgres.service.model.NoteBookModel;
 import com.sanotes.saNotesPostgres.service.model.TagModel;
 import com.sanotes.saNotesWeb.service.NoteBookService;
@@ -23,6 +24,10 @@ public class NotesRestController {
    @Autowired
    TagService tagService;
 
+    @GetMapping("/notes")
+    public ResponseEntity<List<NotModel>> getNotes(){
+        return ResponseEntity.ok().body(notesService.getNotes());
+    }
 
     @GetMapping("/notebooks")
     public ResponseEntity<Iterable<NoteBookModel>> getNoteBooks(){

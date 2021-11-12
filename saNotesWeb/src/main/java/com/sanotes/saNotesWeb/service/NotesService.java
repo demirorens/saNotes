@@ -1,7 +1,7 @@
 package com.sanotes.saNotesWeb.service;
 
 import com.sanotes.saNotesMongo.DAO.NoteRepository;
-import com.sanotes.saNotesMongo.model.NoteModel;
+import com.sanotes.saNotesMongo.model.NotModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,17 +15,17 @@ public class NotesService {
     NoteRepository  noteRepository;
 
 
-    public NoteModel saveNote(NoteModel noteModel){
+    public NotModel saveNote(NotModel notModel){
 
-        return noteRepository.save(noteModel);
+        return noteRepository.save(notModel);
     }
 
-    public List<NoteModel> getNotes(){
+    public List<NotModel> getNotes(){
 
         return noteRepository.findAll();
     }
 
-    public Optional<NoteModel> getNote(String id){
+    public Optional<NotModel> getNote(String id){
         return noteRepository.findById(id);
     }
 }

@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "note")
-public class NoteModel {
+public class NotModel {
 
     @Id
     private String id;
@@ -12,10 +12,10 @@ public class NoteModel {
     private String topic;
     private String text;
 
-    public NoteModel() {
+    public NotModel() {
     }
 
-    public NoteModel(String topic, String text) {
+    public NotModel(String topic, String text) {
 
         this.topic = topic;
         this.text = text;

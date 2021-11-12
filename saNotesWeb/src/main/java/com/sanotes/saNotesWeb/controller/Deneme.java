@@ -1,6 +1,6 @@
 package com.sanotes.saNotesWeb.controller;
 
-import com.sanotes.saNotesMongo.model.NoteModel;
+import com.sanotes.saNotesMongo.model.NotModel;
 import com.sanotes.saNotesWeb.service.NotesService;
 import com.sanotes.saNotesPostgres.service.model.NoteBookModel;
 import com.sanotes.saNotesWeb.service.NoteBookService;
@@ -22,15 +22,15 @@ public class Deneme {
 
 
     @GetMapping("notes")
-    public List<NoteModel> getNotes(){
+    public List<NotModel> getNotes(){
         return notesService.getNotes();
     }
 
     @PostMapping("savenote")
-    public ResponseEntity<NoteModel> saveNote(@RequestBody NoteModel  noteModel){
+    public ResponseEntity<NotModel> saveNote(@RequestBody NotModel notModel){
         try {
-            NoteModel _NoteModel1 = notesService.saveNote(new NoteModel(noteModel.getTopic(),noteModel.getText()));
-            return new ResponseEntity<>(_NoteModel1, HttpStatus.CREATED);
+            NotModel _NotModel11 = notesService.saveNote(new NotModel(notModel.getTopic(), notModel.getText()));
+            return new ResponseEntity<>(_NotModel11, HttpStatus.CREATED);
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
