@@ -1,20 +1,37 @@
 package com.sanotes.saNotesPostgres.service.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sanotes.saNotesPostgres.service.model.audit.DateAudit;
+import com.sanotes.saNotesPostgres.service.model.audit.UserAudit;
+import com.sanotes.saNotesPostgres.service.model.user.User;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Entity
 @Table(name = "notebook")
-public class NoteBookModel {
+public class NoteBookModel extends UserAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(nullable = false)
+    @NotBlank
     private String name;
 
-    @Column(nullable = false)
+    @NotBlank
     private String description;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "notebook", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<NotesModel> notes;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public NoteBookModel() {
     }
@@ -31,6 +48,15 @@ public class NoteBookModel {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 '}';
+    }
+
+    @JsonIgnore
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public long getId() {
@@ -56,4 +82,17 @@ public class NoteBookModel {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public List<NotesModel> getNotes() {
+        return notes == null ? null : new ArrayList<>(notes);
+    }
+
+    public void setNotes(List<NotesModel> notes) {
+        if (notes == null) {
+            this.notes = null;
+        } else {
+            this.notes = Collections.unmodifiableList(notes);
+        }
+    }
+
 }

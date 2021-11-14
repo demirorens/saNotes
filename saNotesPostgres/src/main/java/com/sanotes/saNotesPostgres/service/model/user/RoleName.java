@@ -1,4 +1,6 @@
 package com.sanotes.saNotesPostgres.service.model.user;
 
-public class Address {
+public enum RoleName {
+    ROLE_ADMIN,
+    ROLE_USER
 }

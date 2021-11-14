@@ -7,7 +7,7 @@ spring:
     hikari:
       connectionTimeout: 20000
       maximumPoolSize: 5
-    url: jdbc:postgresql://localhost:5432/notebooks
+    url: jdbc:postgresql://localhost:5432/demo
     username: postgres
     password: password
   jpa:
@@ -16,10 +16,5 @@ spring:
       ddl-auto: update
     show-sql: true
 
-logging:
-  level:
-    org:
-      springframework: INFO
-    root: ERROR
 
 
