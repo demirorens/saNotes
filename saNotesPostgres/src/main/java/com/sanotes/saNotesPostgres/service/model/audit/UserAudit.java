@@ -16,36 +16,34 @@ public abstract class UserAudit extends DateAudit{
     private static final long serialVersionUID = 1L;
 
     @CreatedBy
-    @Column( nullable = false,updatable = false)
-    private long createdBy;
+    @Column( updatable = false)
+    private Long createdBy;
 
     @LastModifiedBy
-    @Column(nullable = false)
-    private long lastModifiedBy;
+    private Long lastModifiedBy;
 
     public UserAudit() {
         super();
     }
 
-    public UserAudit( long createdBy, long lastModifiedBy) {
-        super();
+    public UserAudit(Long createdBy, Long lastModifiedBy) {
         this.createdBy = createdBy;
         this.lastModifiedBy = lastModifiedBy;
     }
 
-    public long getCreatedBy() {
+    public Long getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(long createdBy) {
+    public void setCreatedBy(Long createdBy) {
         this.createdBy = createdBy;
     }
 
-    public long getLastModifiedBy() {
+    public Long getLastModifiedBy() {
         return lastModifiedBy;
     }
 
-    public void setLastModifiedBy(long lastModifiedBy) {
+    public void setLastModifiedBy(Long lastModifiedBy) {
         this.lastModifiedBy = lastModifiedBy;
     }
 }

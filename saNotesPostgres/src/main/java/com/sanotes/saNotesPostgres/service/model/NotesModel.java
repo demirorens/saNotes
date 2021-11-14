@@ -1,7 +1,5 @@
 package com.sanotes.saNotesPostgres.service.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sanotes.saNotesPostgres.service.model.audit.DateAudit;
 import com.sanotes.saNotesPostgres.service.model.audit.UserAudit;
 import org.hibernate.annotations.NaturalId;
 
@@ -10,12 +8,14 @@ import java.util.List;
 
 @Entity
 @Table(name="notes",
-        uniqueConstraints = {@UniqueConstraint(name = "note_id",columnNames = {"note_id"})})
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"note_id"})})
 public class NotesModel extends UserAudit {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @Column(name = "note_id", nullable = false)
     @NaturalId
@@ -25,7 +25,10 @@ public class NotesModel extends UserAudit {
     @JoinColumn(name = "notebook_id")
     private NoteBookModel notebook;
 
-    @ManyToMany(mappedBy = "notes")
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "note_tags",
+            joinColumns = @JoinColumn(name = "note_id",referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id",referencedColumnName = "id") )
     private List<TagModel> tags;
 
     public NotesModel() {
@@ -51,11 +54,11 @@ public class NotesModel extends UserAudit {
         this.tags = tags;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

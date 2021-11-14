@@ -3,7 +3,6 @@ package com.sanotes.saNotesPostgres.service.model.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sanotes.saNotesPostgres.service.model.NoteBookModel;
-import com.sanotes.saNotesPostgres.service.model.NotesModel;
 import com.sanotes.saNotesPostgres.service.model.TagModel;
 import com.sanotes.saNotesPostgres.service.model.audit.DateAudit;
 
@@ -16,13 +15,15 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity
-@Table(name = "user", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"}),
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"}),
     @UniqueConstraint(columnNames = {"email"})})
 public class User extends DateAudit {
 
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @NotBlank
     @Column(name = "first_name")
@@ -105,11 +106,11 @@ public class User extends DateAudit {
         }
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

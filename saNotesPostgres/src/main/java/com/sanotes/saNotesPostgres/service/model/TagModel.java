@@ -11,9 +11,11 @@ import java.util.List;
 @Table(name = "tag")
 public class TagModel extends UserAudit {
 
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -21,10 +23,10 @@ public class TagModel extends UserAudit {
     @Column(nullable = false)
     private String description;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "note_tags",
             joinColumns = @JoinColumn(name = "tag_id",referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "note_id",referencedColumnName = "note_id"))
+            inverseJoinColumns = @JoinColumn(name = "note_id",referencedColumnName = "id"))
     private List<NotesModel> notes;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -65,11 +67,11 @@ public class TagModel extends UserAudit {
         this.notes = notes;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

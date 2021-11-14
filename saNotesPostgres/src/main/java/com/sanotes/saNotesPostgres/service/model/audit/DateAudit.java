@@ -8,7 +8,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
-import java.util.Objects;
+import java.io.Serializable;
+import java.time.Instant;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -16,39 +17,38 @@ import java.util.Objects;
         value = {"createdAt","lastModifiedAt"},
         allowGetters = true
 )
-public abstract class DateAudit {
+public abstract class DateAudit implements Serializable {
     private static final long serialVersionUID = 1L;
+
     @CreatedDate
     @Column(nullable = false,updatable = false)
-    private long createdAt;
+    private Instant createdAt;
 
     @LastModifiedDate
     @Column(nullable = false)
-    private long lastModifiedAt;
+    private Instant lastModifiedAt;
 
     public DateAudit() {
     }
 
-    public DateAudit(long createdAt, long lastModifiedAt) {
+    public DateAudit(Instant createdAt, Instant lastModifiedAt) {
         this.createdAt = createdAt;
         this.lastModifiedAt = lastModifiedAt;
     }
 
-    public long getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(long createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
-    public long getLastModifiedAt() {
+    public Instant getLastModifiedAt() {
         return lastModifiedAt;
     }
 
-    public void setLastModifiedAt(long lastModifiedAt) {
+    public void setLastModifiedAt(Instant lastModifiedAt) {
         this.lastModifiedAt = lastModifiedAt;
     }
-
-
 }

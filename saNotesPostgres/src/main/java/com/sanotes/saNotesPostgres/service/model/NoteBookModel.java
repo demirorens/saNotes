@@ -1,7 +1,6 @@
 package com.sanotes.saNotesPostgres.service.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sanotes.saNotesPostgres.service.model.audit.DateAudit;
 import com.sanotes.saNotesPostgres.service.model.audit.UserAudit;
 import com.sanotes.saNotesPostgres.service.model.user.User;
 
@@ -15,9 +14,11 @@ import java.util.List;
 @Table(name = "notebook")
 public class NoteBookModel extends UserAudit {
 
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @NotBlank
     private String name;
@@ -59,11 +60,11 @@ public class NoteBookModel extends UserAudit {
         this.user = user;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
