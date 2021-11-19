@@ -6,20 +6,21 @@ import com.sanotes.saNotesWeb.security.UserPrincipal;
 import com.sanotes.saNotesWeb.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
 @Service
-public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
+public class CustomUserDetailsServiceImpl implements UserDetailsService,  CustomUserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
 
     @Override
     @Transactional
-    public UserDetails loadUserByUserName(String userNameOrEmail) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String userNameOrEmail) throws UsernameNotFoundException {
         User  user = userRepository.findByUsernameOrEmail(userNameOrEmail,userNameOrEmail)
                 .orElseThrow(()->new UsernameNotFoundException(
                         String.format("%s username or email not found",userNameOrEmail)));

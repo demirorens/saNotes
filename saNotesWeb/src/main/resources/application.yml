@@ -20,3 +20,6 @@ spring:
 app:
   jwtSecret: secret
   jwtExpirationInMs: 3600000
+
+cors:
+  allowedOrigins: '*'
