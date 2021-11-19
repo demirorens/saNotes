@@ -14,11 +14,11 @@ public class ExceptionResponse {
     public ExceptionResponse() {
     }
 
-    public ExceptionResponse(String error, Integer status, List<String> messages, Instant timestamp) {
+    public ExceptionResponse(String error, Integer status, List<String> messages) {
         this.error = error;
         this.status = status;
         setMessages(messages);
-        this.timestamp = timestamp;
+        this.timestamp = Instant.now();
     }
 
     public String getError() {
