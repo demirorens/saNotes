@@ -1,8 +1,12 @@
 package com.sanotes.saNotesPostgres.service.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sanotes.saNotesPostgres.service.model.audit.UserAudit;
 import com.sanotes.saNotesPostgres.service.model.user.User;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -12,6 +16,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "notebook")
+@JsonIdentityInfo(scope = NoteBookModel.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class NoteBookModel extends UserAudit {
 
     private static final long serialVersionUID = 1L;
@@ -26,9 +33,11 @@ public class NoteBookModel extends UserAudit {
     @NotBlank
     private String description;
 
-    @JsonIgnore
+
+
     @OneToMany(mappedBy = "notebook", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<NotesModel> notes;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -51,7 +60,7 @@ public class NoteBookModel extends UserAudit {
                 '}';
     }
 
-    @JsonIgnore
+    @JsonBackReference
     public User getUser() {
         return user;
     }
@@ -84,6 +93,7 @@ public class NoteBookModel extends UserAudit {
         this.description = description;
     }
 
+    @JsonManagedReference
     public List<NotesModel> getNotes() {
         return notes == null ? null : new ArrayList<>(notes);
     }

@@ -1,8 +1,14 @@
 package com.sanotes.saNotesWeb.payload;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.sanotes.saNotesPostgres.service.model.NoteBookModel;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 
 public class UserResponse {
     private Long id;
@@ -26,6 +32,7 @@ public class UserResponse {
         setTags(tags);
     }
 
+
     public List<NoteBookResponse> getNotebooks() {
         return notebooks == null ? null: new ArrayList<>(notebooks);
     }
@@ -36,6 +43,7 @@ public class UserResponse {
         else
             this.notebooks = Collections.unmodifiableList(notebooks);
     }
+
 
     public List<TagResponse> getTags() {
         return tags == null ? null: new ArrayList<>(tags);

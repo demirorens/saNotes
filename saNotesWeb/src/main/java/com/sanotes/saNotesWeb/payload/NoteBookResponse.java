@@ -1,13 +1,22 @@
 package com.sanotes.saNotesWeb.payload;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@JsonIdentityInfo(scope = NoteBookResponse.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class NoteBookResponse {
 
     private Long id;
     private String name;
     private String description;
+
     private List<NoteResponse> notes;
 
     public NoteBookResponse() {
@@ -44,6 +53,7 @@ public class NoteBookResponse {
         this.description = description;
     }
 
+    @JsonManagedReference
     public List<NoteResponse> getNotes() {
         return notes == null ? null: new ArrayList<>(notes);
     }

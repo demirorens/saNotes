@@ -1,25 +1,15 @@
 package com.sanotes.saNotesWeb.service;
 
-import com.sanotes.saNotesPostgres.service.DAO.TagRepository;
+import com.sanotes.saNotesPostgres.service.model.NotesModel;
 import com.sanotes.saNotesPostgres.service.model.TagModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.sanotes.saNotesWeb.payload.ByIdRequest;
+import com.sanotes.saNotesWeb.security.UserPrincipal;
 
 import java.util.List;
 
-@Service
-public class TagService {
+public interface TagService {
 
-    @Autowired
-    TagRepository  tagRepository;
+    TagModel saveTag(TagModel tagModel, UserPrincipal userPrincipal);
 
-    public TagModel saveTag(TagModel tagModel){
-
-        return tagRepository.save(tagModel);
-    }
-
-    public List<TagModel> getTags(){
-
-        return (List<TagModel>) tagRepository.findAll();
-    }
+    List<NotesModel> getNotes(ByIdRequest byIdRequest, UserPrincipal userPrincipal);
 }

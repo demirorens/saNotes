@@ -1,7 +1,6 @@
 package com.sanotes.saNotesPostgres.service.model.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.sanotes.saNotesPostgres.service.model.NoteBookModel;
 import com.sanotes.saNotesPostgres.service.model.TagModel;
 import com.sanotes.saNotesPostgres.service.model.audit.DateAudit;
@@ -17,6 +16,9 @@ import java.util.List;
 @Entity
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"}),
     @UniqueConstraint(columnNames = {"email"})})
+@JsonIdentityInfo(scope = User.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class User extends DateAudit {
 
     private static final long serialVersionUID = 1L;
@@ -55,16 +57,18 @@ public class User extends DateAudit {
             inverseJoinColumns = @JoinColumn(name = "role_id",referencedColumnName = "id"))
     private List<Role> roles;
 
-    @JsonIgnore
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<NoteBookModel> noteBooks;
 
-    @JsonIgnore
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<TagModel> tags;
 
     public User() {
     }
+
+
 
     public User(String firstname, String lastname, String username, String password, String email) {
         this.firstname = firstname;
@@ -82,6 +86,7 @@ public class User extends DateAudit {
         this.roles = roles;
     }
 
+    @JsonManagedReference
     public List<NoteBookModel> getNoteBooks() {
         return noteBooks == null ? null : new ArrayList<>(noteBooks);
     }
@@ -93,7 +98,7 @@ public class User extends DateAudit {
             this.noteBooks = Collections.unmodifiableList(noteBooks);
         }
     }
-
+    @JsonManagedReference
     public List<TagModel> getTags() {
         return tags == null ? null : new ArrayList<>(tags);
     }

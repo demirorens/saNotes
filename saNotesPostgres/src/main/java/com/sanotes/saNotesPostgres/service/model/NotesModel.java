@@ -1,5 +1,8 @@
 package com.sanotes.saNotesPostgres.service.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sanotes.saNotesPostgres.service.model.audit.UserAudit;
 import org.hibernate.annotations.NaturalId;
 
@@ -9,6 +12,9 @@ import java.util.List;
 @Entity
 @Table(name="notes",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"note_id"})})
+@JsonIdentityInfo(scope = NotesModel.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class NotesModel extends UserAudit {
 
     private static final long serialVersionUID = 1L;
@@ -21,9 +27,16 @@ public class NotesModel extends UserAudit {
     @NaturalId
     private String noteId;
 
+    @Transient
+    private String topic;
+    @Transient
+    private String text;
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "notebook_id")
     private NoteBookModel notebook;
+
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "note_tags",
@@ -38,6 +51,7 @@ public class NotesModel extends UserAudit {
         this.noteId = noteId;
     }
 
+    @JsonBackReference
     public NoteBookModel getNotebook() {
         return notebook;
     }
@@ -70,4 +84,19 @@ public class NotesModel extends UserAudit {
         this.noteId = noteId;
     }
 
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 }

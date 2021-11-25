@@ -1,14 +1,21 @@
 package com.sanotes.saNotesPostgres.service.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sanotes.saNotesPostgres.service.model.audit.UserAudit;
 import com.sanotes.saNotesPostgres.service.model.user.User;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "tag")
+@JsonIdentityInfo(scope = TagModel.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class TagModel extends UserAudit {
 
     private static final long serialVersionUID = 1L;
@@ -23,11 +30,13 @@ public class TagModel extends UserAudit {
     @Column(nullable = false)
     private String description;
 
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "note_tags",
             joinColumns = @JoinColumn(name = "tag_id",referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "note_id",referencedColumnName = "id"))
     private List<NotesModel> notes;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -50,7 +59,7 @@ public class TagModel extends UserAudit {
                 '}';
     }
 
-    @JsonIgnore
+    @JsonBackReference
     public User getUser() {
         return user;
     }
@@ -58,6 +67,7 @@ public class TagModel extends UserAudit {
     public void setUser(User user) {
         this.user = user;
     }
+
 
     public List<NotesModel> getNotes() {
         return notes;
