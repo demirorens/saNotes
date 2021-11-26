@@ -38,7 +38,7 @@ public class NotesModel extends UserAudit {
     private NoteBookModel notebook;
 
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinTable(name = "note_tags",
             joinColumns = @JoinColumn(name = "note_id",referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id",referencedColumnName = "id") )

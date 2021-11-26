@@ -4,6 +4,8 @@ import com.sanotes.saNotesPostgres.service.DAO.NoteBookRepository;
 import com.sanotes.saNotesPostgres.service.DAO.RoleRepository;
 import com.sanotes.saNotesPostgres.service.DAO.TagRepository;
 import com.sanotes.saNotesPostgres.service.DAO.UserRepository;
+import com.sanotes.saNotesPostgres.service.model.NoteBookModel;
+import com.sanotes.saNotesPostgres.service.model.NotesModel;
 import com.sanotes.saNotesPostgres.service.model.user.Role;
 import com.sanotes.saNotesPostgres.service.model.user.RoleName;
 import com.sanotes.saNotesPostgres.service.model.user.User;
@@ -14,6 +16,7 @@ import com.sanotes.saNotesWeb.exception.UnauthorizedException;
 import com.sanotes.saNotesWeb.payload.*;
 import com.sanotes.saNotesWeb.security.UserPrincipal;
 import com.sanotes.saNotesWeb.service.UserService;
+import com.sanotes.saNotesWeb.service.helper.NoteHelper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -39,6 +42,8 @@ public class UserServiceImpl implements UserService {
     private NoteBookRepository noteBookRepository;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private NoteHelper noteHelper;
 
     @Override
     public BooleanResponse checkUsernameAvailability(String username) {
@@ -134,8 +139,16 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(username).orElseThrow(
                 ()->new ResourceNotFoundException("User","username",username));
         if(user.getId().equals(currentUser.getId())){
+            List<NoteBookModel> noteBooks = user.getNoteBooks();
+            for(int i = 0; i<noteBooks.size(); i++){
+                NoteBookModel noteBook = noteBooks.get(i);
+                List<NotesModel> notes=  noteBook.getNotes();
+                notes = noteHelper.fillNotes(notes);
+                noteBook.setNotes(notes);
+                noteBooks.set(i,noteBook);
+            }
             List<NoteBookResponse> noteBookResponses =
-                    Arrays.asList(modelMapper.map(user.getNoteBooks(), NoteBookResponse[].class));
+                    Arrays.asList(modelMapper.map(noteBooks, NoteBookResponse[].class));
             List<TagResponse> tagResponses =
                     Arrays.asList(modelMapper.map(user.getTags(), TagResponse[].class));
             return new UserResponse(user.getId(),user.getFirstname(),user.getLastname(),

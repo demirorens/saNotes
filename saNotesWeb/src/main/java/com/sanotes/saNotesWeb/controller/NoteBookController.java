@@ -2,7 +2,7 @@ package com.sanotes.saNotesWeb.controller;
 
 import com.sanotes.saNotesPostgres.service.model.NoteBookModel;
 import com.sanotes.saNotesPostgres.service.model.NotesModel;
-import com.sanotes.saNotesPostgres.service.model.user.User;
+import com.sanotes.saNotesWeb.payload.ApiResponse;
 import com.sanotes.saNotesWeb.payload.ByIdRequest;
 import com.sanotes.saNotesWeb.payload.NoteBookResponse;
 import com.sanotes.saNotesWeb.payload.NoteResponse;
@@ -39,6 +39,15 @@ public class NoteBookController {
         return new ResponseEntity<>(noteBookResponse, HttpStatus.CREATED);
     }
 
+    @PutMapping
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<NoteBookResponse> updateNoteBook(@Valid @RequestBody NoteBookModel noteBook,
+                                                        @CurrentUser UserPrincipal userPrincipal){
+        NoteBookModel newNoteBook = noteBookService.updateNoteBook(noteBook,userPrincipal);
+        NoteBookResponse noteBookResponse =modelMapper.map(newNoteBook, NoteBookResponse.class);
+        return new ResponseEntity<>(noteBookResponse, HttpStatus.CREATED);
+    }
+
     @GetMapping("/notes")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<NoteResponse>> getNoteBookNotes(@Valid @RequestBody ByIdRequest byIdRequest,
@@ -48,6 +57,13 @@ public class NoteBookController {
         return new ResponseEntity<>(noteResponses, HttpStatus.OK);
     }
 
+    @DeleteMapping
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<ApiResponse> deleteNoteBook(@Valid @RequestBody ByIdRequest byIdRequest,
+                                                  @CurrentUser UserPrincipal userPrincipal){
+        ApiResponse apiResponse = noteBookService.deleteNoteBook(byIdRequest, userPrincipal);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
 
 
 

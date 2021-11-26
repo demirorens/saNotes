@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sanotes.saNotesPostgres.service.model.audit.UserAudit;
 import com.sanotes.saNotesPostgres.service.model.user.User;
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.List;
@@ -31,7 +30,7 @@ public class TagModel extends UserAudit {
     private String description;
 
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.DETACH)
     @JoinTable(name = "note_tags",
             joinColumns = @JoinColumn(name = "tag_id",referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "note_id",referencedColumnName = "id"))

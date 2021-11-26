@@ -1,9 +1,7 @@
 package com.sanotes.saNotesWeb.config;
 
-import com.sanotes.saNotesPostgres.service.DAO.UserRepository;
 import com.sanotes.saNotesWeb.security.JwtAuthenticationEntryPoint;
 import com.sanotes.saNotesWeb.security.JwtAuthenticationFilter;
-import com.sanotes.saNotesWeb.service.CustomUserDetailsService;
 import com.sanotes.saNotesWeb.service.implement.CustomUserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

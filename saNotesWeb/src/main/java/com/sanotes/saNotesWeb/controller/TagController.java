@@ -1,15 +1,13 @@
 package com.sanotes.saNotesWeb.controller;
 
-import com.sanotes.saNotesPostgres.service.model.NoteBookModel;
 import com.sanotes.saNotesPostgres.service.model.NotesModel;
 import com.sanotes.saNotesPostgres.service.model.TagModel;
+import com.sanotes.saNotesWeb.payload.ApiResponse;
 import com.sanotes.saNotesWeb.payload.ByIdRequest;
-import com.sanotes.saNotesWeb.payload.NoteBookResponse;
 import com.sanotes.saNotesWeb.payload.NoteResponse;
 import com.sanotes.saNotesWeb.payload.TagResponse;
 import com.sanotes.saNotesWeb.security.CurrentUser;
 import com.sanotes.saNotesWeb.security.UserPrincipal;
-import com.sanotes.saNotesWeb.service.NoteBookService;
 import com.sanotes.saNotesWeb.service.TagService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +39,15 @@ public class TagController {
         return new ResponseEntity<>(tagResponse, HttpStatus.CREATED);
     }
 
+    @PutMapping
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<TagResponse> updateTag(@Valid @RequestBody TagModel tag,
+                                              @CurrentUser UserPrincipal userPrincipal){
+        TagModel newTag = tagService.updateTag(tag,userPrincipal);
+        TagResponse tagResponse =modelMapper.map(newTag, TagResponse.class);
+        return new ResponseEntity<>(tagResponse, HttpStatus.CREATED);
+    }
+
     @GetMapping("/notes")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<NoteResponse>> getTagNotes(@Valid @RequestBody ByIdRequest byIdRequest,
@@ -48,5 +55,13 @@ public class TagController {
         List<NotesModel> notes = tagService.getNotes(byIdRequest,userPrincipal);
         List<NoteResponse> noteResponses = Arrays.asList(modelMapper.map(notes, NoteResponse[].class));
         return new ResponseEntity<>(noteResponses, HttpStatus.OK);
+    }
+
+    @DeleteMapping
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<ApiResponse> deleteTag(@Valid @RequestBody ByIdRequest byIdRequest,
+                                                      @CurrentUser UserPrincipal userPrincipal){
+        ApiResponse apiResponse = tagService.deleteTag(byIdRequest, userPrincipal);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 }

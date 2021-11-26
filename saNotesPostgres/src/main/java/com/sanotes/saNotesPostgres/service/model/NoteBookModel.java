@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sanotes.saNotesPostgres.service.model.audit.UserAudit;
 import com.sanotes.saNotesPostgres.service.model.user.User;
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -35,7 +34,7 @@ public class NoteBookModel extends UserAudit {
 
 
 
-    @OneToMany(mappedBy = "notebook", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "notebook", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<NotesModel> notes;
 
 
