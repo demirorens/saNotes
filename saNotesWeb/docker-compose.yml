@@ -1,0 +1,63 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:alpine
+    container_name: sanotes-postgres-db
+    restart: always
+    user: postgres
+    environment:
+      POSTGRES_DB: 'sanotes'
+      POSTGRES_PASSWORD: 'password'
+    ports:
+      - '5432:5432'
+    networks:
+      - sanotes-network
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    volumes:
+      - sanotes-postgres-db-data:/var/lib/postgresql/data
+  mongo:
+    image: mongo:latest
+    container_name: sanotes-mongo-db
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: 'sanotes'
+    ports:
+      - 27017:27017
+    networks:
+      - sanotes-network
+    volumes:
+      - sanotes-mongo-db-data:/var/lib/mongo/data
+  application:
+    container_name: sanotes-application
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - sanotes-network
+    environment:
+      - SPRING_DATA_MONGODB_HOST=mongo:27017
+      - SPRING_DATA_MONGODB_DATABASE=sanotes
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/sanotes
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      - "db"
+      - "mongo"
+networks:
+  sanotes-network:
+    name: sanotes-network
+    driver: bridge
+volumes:
+  sanotes-postgres-db-data:
+    driver: local
+  sanotes-mongo-db-data:
+    driver: local
+
