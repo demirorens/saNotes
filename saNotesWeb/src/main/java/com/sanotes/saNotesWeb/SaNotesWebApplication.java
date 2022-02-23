@@ -1,6 +1,11 @@
 package com.sanotes.saNotesWeb;
 
 import com.sanotes.saNotesWeb.security.JwtAuthenticationFilter;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,6 +21,12 @@ import java.util.TimeZone;
 @EnableMongoRepositories (basePackages = {"com.sanotes"})
 @EnableJpaRepositories (basePackages = {"com.sanotes"})
 @EntityScan (basePackages = {"com.sanotes"})
+@SecurityScheme(name = "bearerAuth",
+		scheme = "bearer",
+		bearerFormat = "JWT",
+		type = SecuritySchemeType.HTTP,
+		in = SecuritySchemeIn.HEADER)
+@OpenAPIDefinition(info = @Info(title = "saNotes API", version = "1.0", description = "Note Application"))
 public class SaNotesWebApplication {
 
 	public static void main(String[] args) {

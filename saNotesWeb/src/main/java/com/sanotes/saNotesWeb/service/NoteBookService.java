@@ -1,7 +1,7 @@
 package com.sanotes.saNotesWeb.service;
 
-import com.sanotes.saNotesPostgres.service.model.NoteBookModel;
-import com.sanotes.saNotesPostgres.service.model.NotesModel;
+import com.sanotes.saNotesCommons.model.NoteBookModel;
+import com.sanotes.saNotesCommons.model.NotesModel;
 import com.sanotes.saNotesWeb.payload.ApiResponse;
 import com.sanotes.saNotesWeb.payload.ByIdRequest;
 import com.sanotes.saNotesWeb.security.UserPrincipal;

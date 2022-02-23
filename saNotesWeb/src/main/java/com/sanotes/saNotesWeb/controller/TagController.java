@@ -1,7 +1,7 @@
 package com.sanotes.saNotesWeb.controller;
 
-import com.sanotes.saNotesPostgres.service.model.NotesModel;
-import com.sanotes.saNotesPostgres.service.model.TagModel;
+import com.sanotes.saNotesCommons.model.NotesModel;
+import com.sanotes.saNotesCommons.model.TagModel;
 import com.sanotes.saNotesWeb.payload.ApiResponse;
 import com.sanotes.saNotesWeb.payload.ByIdRequest;
 import com.sanotes.saNotesWeb.payload.NoteResponse;
@@ -9,6 +9,9 @@ import com.sanotes.saNotesWeb.payload.TagResponse;
 import com.sanotes.saNotesWeb.security.CurrentUser;
 import com.sanotes.saNotesWeb.security.UserPrincipal;
 import com.sanotes.saNotesWeb.service.TagService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +25,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tags")
+@Tag(name = "tag", description = "the Tag API")
 public class TagController {
 
     @Autowired
@@ -32,6 +36,7 @@ public class TagController {
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
+    @Operation(summary = "Add tag endpoint", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<TagResponse> addTag(@Valid @RequestBody TagModel tag,
                                                    @CurrentUser UserPrincipal userPrincipal){
         TagModel newTag = tagService.saveTag(tag,userPrincipal);
@@ -41,6 +46,7 @@ public class TagController {
 
     @PutMapping
     @PreAuthorize("hasRole('USER')")
+    @Operation(summary = "Update tag endpoint", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<TagResponse> updateTag(@Valid @RequestBody TagModel tag,
                                               @CurrentUser UserPrincipal userPrincipal){
         TagModel newTag = tagService.updateTag(tag,userPrincipal);
@@ -50,6 +56,7 @@ public class TagController {
 
     @GetMapping("/notes")
     @PreAuthorize("hasRole('USER')")
+    @Operation(summary = "Get tag with notes endpoint", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<List<NoteResponse>> getTagNotes(@Valid @RequestBody ByIdRequest byIdRequest,
                                                           @CurrentUser UserPrincipal userPrincipal){
         List<NotesModel> notes = tagService.getNotes(byIdRequest,userPrincipal);
@@ -59,6 +66,7 @@ public class TagController {
 
     @DeleteMapping
     @PreAuthorize("hasRole('USER')")
+    @Operation(summary = "Delete tag endpoint", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<ApiResponse> deleteTag(@Valid @RequestBody ByIdRequest byIdRequest,
                                                       @CurrentUser UserPrincipal userPrincipal){
         ApiResponse apiResponse = tagService.deleteTag(byIdRequest, userPrincipal);

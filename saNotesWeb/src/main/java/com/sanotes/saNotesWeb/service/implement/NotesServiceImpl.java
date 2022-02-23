@@ -1,14 +1,14 @@
 package com.sanotes.saNotesWeb.service.implement;
 
 import com.sanotes.saNotesMongo.DAO.NoteRepository;
-import com.sanotes.saNotesMongo.model.NotModel;
+import com.sanotes.saNotesCommons.model.NotModel;
 import com.sanotes.saNotesPostgres.service.DAO.NoteBookRepository;
 import com.sanotes.saNotesPostgres.service.DAO.NotesRepository;
 import com.sanotes.saNotesPostgres.service.DAO.TagRepository;
-import com.sanotes.saNotesPostgres.service.model.NoteBookModel;
-import com.sanotes.saNotesPostgres.service.model.NotesModel;
-import com.sanotes.saNotesPostgres.service.model.TagModel;
-import com.sanotes.saNotesPostgres.service.model.user.User;
+import com.sanotes.saNotesCommons.model.NoteBookModel;
+import com.sanotes.saNotesCommons.model.NotesModel;
+import com.sanotes.saNotesCommons.model.TagModel;
+import com.sanotes.saNotesCommons.model.user.User;
 import com.sanotes.saNotesWeb.exception.ResourceNotFoundException;
 import com.sanotes.saNotesWeb.exception.UnauthorizedException;
 import com.sanotes.saNotesWeb.payload.ApiResponse;

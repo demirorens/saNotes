@@ -16,6 +16,9 @@ spring:
       ddl-auto: update
     show-sql: true
 
+springdoc:
+  api-docs:
+    path: /sanotes-openapi
 
 app:
   jwtSecret: secret

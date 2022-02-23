@@ -1,12 +1,18 @@
 package com.sanotes.saNotesWeb.controller;
 
-import com.sanotes.saNotesPostgres.service.model.user.User;
+import com.sanotes.saNotesCommons.model.user.User;
 import com.sanotes.saNotesWeb.payload.ApiResponse;
 import com.sanotes.saNotesWeb.payload.JwtAuthenticationResponse;
 import com.sanotes.saNotesWeb.payload.LoginRequest;
 import com.sanotes.saNotesWeb.payload.SignUpRequest;
 import com.sanotes.saNotesWeb.security.JwtTokenProvider;
 import com.sanotes.saNotesWeb.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +30,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "login", description = "the Login API")
 public class LoginController {
 
     @Autowired
@@ -35,8 +42,16 @@ public class LoginController {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    @PostMapping("/login")
-    public ResponseEntity<JwtAuthenticationResponse> loginUser(@Valid @RequestBody LoginRequest loginRequest){
+    @Operation(summary = "Login", description = "", tags = { "login" })
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200", description = "Logged in",
+                    content = @Content(schema = @Schema(implementation = JwtAuthenticationResponse.class))) })
+    @PostMapping(value="/login", consumes = { "application/json", "application/xml" })
+    public ResponseEntity<JwtAuthenticationResponse> loginUser(
+            @Parameter(description="Cannot null or empty.",
+                    required=true, schema=@Schema(implementation = LoginRequest.class))
+            @Valid @RequestBody LoginRequest loginRequest){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmailOrUsername(),loginRequest.getPassword())
         );
@@ -45,8 +60,16 @@ public class LoginController {
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwtToken));
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<ApiResponse> signupUser(@Valid @RequestBody SignUpRequest signUpRequest){
+    @Operation(summary = "Sign up", description = "", tags = { "login" })
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "201", description = "Account created",
+                    content = @Content(schema = @Schema(implementation = ApiResponse.class)))})
+    @PostMapping(value = "/signup", consumes = { "application/json", "application/xml" })
+    public ResponseEntity<ApiResponse> signupUser(
+            @Parameter(description="Cannot null or empty.",
+                    required=true, schema=@Schema(implementation = SignUpRequest.class))
+            @Valid @RequestBody SignUpRequest signUpRequest){
         String firstName = signUpRequest.getFirstname();
         String lastName = signUpRequest.getLastname();
         String username = signUpRequest.getUsername();

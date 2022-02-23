@@ -1,7 +1,7 @@
 package com.sanotes.saNotesWeb.service.implement;
 
 import com.sanotes.saNotesPostgres.service.DAO.UserRepository;
-import com.sanotes.saNotesPostgres.service.model.user.User;
+import com.sanotes.saNotesCommons.model.user.User;
 import com.sanotes.saNotesWeb.security.UserPrincipal;
 import com.sanotes.saNotesWeb.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;

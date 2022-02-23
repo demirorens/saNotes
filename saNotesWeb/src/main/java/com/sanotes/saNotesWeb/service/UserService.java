@@ -1,6 +1,6 @@
 package com.sanotes.saNotesWeb.service;
 
-import com.sanotes.saNotesPostgres.service.model.user.User;
+import com.sanotes.saNotesCommons.model.user.User;
 import com.sanotes.saNotesWeb.payload.ApiResponse;
 import com.sanotes.saNotesWeb.payload.BooleanResponse;
 import com.sanotes.saNotesWeb.payload.UserResponse;

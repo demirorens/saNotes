@@ -1,7 +1,7 @@
 package com.sanotes.saNotesWeb.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sanotes.saNotesPostgres.service.model.user.User;
+import com.sanotes.saNotesCommons.model.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,8 +1,8 @@
 package com.sanotes.saNotesWeb.service.helper;
 
 import com.sanotes.saNotesMongo.DAO.NoteRepository;
-import com.sanotes.saNotesMongo.model.NotModel;
-import com.sanotes.saNotesPostgres.service.model.NotesModel;
+import com.sanotes.saNotesCommons.model.NotModel;
+import com.sanotes.saNotesCommons.model.NotesModel;
 import com.sanotes.saNotesWeb.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
