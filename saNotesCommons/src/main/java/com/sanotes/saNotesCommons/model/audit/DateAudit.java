@@ -1,4 +1,4 @@
-package com.sanotes.saNotesPostgres.service.model.audit;
+package com.sanotes.saNotesCommons.model.audit;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.CreatedDate;
