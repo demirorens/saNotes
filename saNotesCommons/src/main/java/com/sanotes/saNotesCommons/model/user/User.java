@@ -1,9 +1,9 @@
-package com.sanotes.saNotesPostgres.service.model.user;
+package com.sanotes.saNotesCommons.model.user;
 
 import com.fasterxml.jackson.annotation.*;
-import com.sanotes.saNotesPostgres.service.model.NoteBookModel;
-import com.sanotes.saNotesPostgres.service.model.TagModel;
-import com.sanotes.saNotesPostgres.service.model.audit.DateAudit;
+import com.sanotes.saNotesCommons.model.NoteBookModel;
+import com.sanotes.saNotesCommons.model.TagModel;
+import com.sanotes.saNotesCommons.model.audit.DateAudit;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;

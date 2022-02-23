@@ -1,4 +1,4 @@
-package com.sanotes.saNotesPostgres.service.model.user;
+package com.sanotes.saNotesCommons.model.user;
 
 public enum RoleName {
     ROLE_ADMIN,

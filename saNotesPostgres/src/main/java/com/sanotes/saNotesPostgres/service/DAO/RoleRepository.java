@@ -1,7 +1,7 @@
 package com.sanotes.saNotesPostgres.service.DAO;
 
-import com.sanotes.saNotesPostgres.service.model.user.Role;
-import com.sanotes.saNotesPostgres.service.model.user.RoleName;
+import com.sanotes.saNotesCommons.model.user.Role;
+import com.sanotes.saNotesCommons.model.user.RoleName;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

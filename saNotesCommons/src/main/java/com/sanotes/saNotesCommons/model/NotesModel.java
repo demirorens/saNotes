@@ -1,9 +1,9 @@
-package com.sanotes.saNotesPostgres.service.model;
+package com.sanotes.saNotesCommons.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.sanotes.saNotesPostgres.service.model.audit.UserAudit;
+import com.sanotes.saNotesCommons.model.audit.UserAudit;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;

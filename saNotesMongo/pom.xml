@@ -11,10 +11,12 @@
 	<name>Child - saNotesMongo</name>
 	<packaging>jar</packaging>
 
+
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+			<groupId>com.sanotes</groupId>
+			<artifactId>com.sanotes.saNotesCommons</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 

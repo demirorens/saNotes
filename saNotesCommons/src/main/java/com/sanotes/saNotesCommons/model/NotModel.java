@@ -1,4 +1,4 @@
-package com.sanotes.saNotesMongo.model;
+package com.sanotes.saNotesCommons.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

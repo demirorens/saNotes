@@ -1,6 +1,6 @@
 package com.sanotes.saNotesMongo.DAO;
 
-import com.sanotes.saNotesMongo.model.NotModel;
+import com.sanotes.saNotesCommons.model.NotModel;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

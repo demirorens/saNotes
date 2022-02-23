@@ -24,6 +24,7 @@
         <module>saNotesWeb</module>
         <module>saNotesPostgres</module>
         <module>saNotesMongo</module>
+        <module>saNotesCommons</module>
     </modules>
     <dependencies>
         <!-- Spring Dependencies Begin-->
@@ -94,6 +95,19 @@
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
             <version>2.3.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.6.4</version>
         </dependency>
     </dependencies>
 

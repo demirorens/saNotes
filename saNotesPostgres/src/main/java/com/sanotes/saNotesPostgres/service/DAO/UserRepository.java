@@ -1,6 +1,6 @@
 package com.sanotes.saNotesPostgres.service.DAO;
 
-import com.sanotes.saNotesPostgres.service.model.user.User;
+import com.sanotes.saNotesCommons.model.user.User;
 import org.springframework.data.repository.CrudRepository;
 
 import javax.validation.constraints.NotBlank;

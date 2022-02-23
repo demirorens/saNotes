@@ -1,6 +1,6 @@
 package com.sanotes.saNotesPostgres.service.DAO;
 
-import com.sanotes.saNotesPostgres.service.model.NotesModel;
+import com.sanotes.saNotesCommons.model.NotesModel;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

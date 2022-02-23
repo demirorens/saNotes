@@ -1,4 +1,4 @@
-package com.sanotes.saNotesPostgres.service.model.user;
+package com.sanotes.saNotesCommons.model.user;
 
 import org.hibernate.annotations.NaturalId;
 
