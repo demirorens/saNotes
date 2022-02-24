@@ -1,7 +1,5 @@
 package com.sanotes.saNotesWeb.payload;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
 public class JwtAuthenticationResponse {
 
     private String accessToken;

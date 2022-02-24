@@ -51,9 +51,9 @@ public class NoteBookServiceImpl implements NoteBookService {
         return noteBookRepository.save(oldNoteBookModel);
     }
 
-    public List<NotesModel> getNotes(ByIdRequest byIdRequest, UserPrincipal userPrincipal){
-        NoteBookModel noteBookModel = noteBookRepository.findById(byIdRequest.getId())
-                .orElseThrow(()->new ResourceNotFoundException("Notebook", "by id",byIdRequest.getId().toString()));
+    public List<NotesModel> getNotes(Long id, UserPrincipal userPrincipal){
+        NoteBookModel noteBookModel = noteBookRepository.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException("Notebook", "by id",id.toString()));
         if(!noteBookModel.getUser().getId().equals(userPrincipal.getId())){
             throw  new UnauthorizedException("User don't have permission for this request");
         }

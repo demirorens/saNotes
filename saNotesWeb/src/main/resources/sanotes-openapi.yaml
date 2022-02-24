@@ -1,0 +1,1178 @@
+openapi: 3.0.1
+info:
+  title: saNotes API
+  description: Note Application
+  version: "1.0"
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+tags:
+- name: login
+  description: the Login API
+- name: notebook
+  description: the Notebook API
+- name: notes
+  description: the Note API
+- name: tag
+  description: the Tag API
+- name: user
+  description: the User API
+paths:
+  /api/users/{username}:
+    put:
+      tags:
+      - user
+      summary: Update user
+      operationId: updateUser
+      parameters:
+      - name: username
+        in: path
+        description: Username
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/User'
+      security:
+      - bearerAuth: []
+    delete:
+      tags:
+      - user
+      summary: Delete user
+      operationId: deleteUser
+      parameters:
+      - name: username
+        in: path
+        description: Username
+        required: true
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - bearerAuth: []
+  /api/users/{username}/removeAdmin:
+    put:
+      tags:
+      - user
+      summary: Remove admin role
+      operationId: removeAdmin
+      parameters:
+      - name: username
+        in: path
+        description: Username
+        required: true
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - bearerAuth: []
+  /api/users/{username}/giveAdmin:
+    put:
+      tags:
+      - user
+      summary: Update user as admin
+      operationId: giveAdmin
+      parameters:
+      - name: username
+        in: path
+        description: Username
+        required: true
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - bearerAuth: []
+  /api/tags:
+    put:
+      tags:
+      - tag
+      summary: Update tag
+      operationId: updateTag
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagModel'
+        required: true
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TagResponse'
+      security:
+      - bearerAuth: []
+    post:
+      tags:
+      - tag
+      summary: Add tag
+      operationId: addTag
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagModel'
+        required: true
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TagResponse'
+      security:
+      - bearerAuth: []
+    delete:
+      tags:
+      - tag
+      summary: Delete tag
+      operationId: deleteTag
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ByIdRequest'
+        required: true
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - bearerAuth: []
+  /api/notes:
+    get:
+      tags:
+      - notes
+      summary: Get note
+      operationId: getNote
+      parameters:
+      - name: id
+        in: query
+        description: Note id
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/NoteResponse'
+      security:
+      - bearerAuth: []
+    put:
+      tags:
+      - notes
+      summary: Update note
+      operationId: updateNote
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotesModel'
+        required: true
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/NoteResponse'
+      security:
+      - bearerAuth: []
+    post:
+      tags:
+      - notes
+      summary: Add note
+      operationId: addNote
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotesModel'
+        required: true
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/NoteResponse'
+      security:
+      - bearerAuth: []
+    delete:
+      tags:
+      - notes
+      summary: Delete note
+      operationId: deleteNote
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ByIdRequest'
+        required: true
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - bearerAuth: []
+  /api/noteBooks:
+    put:
+      tags:
+      - notebook
+      summary: Update notebook
+      operationId: updateNoteBook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoteBookModel'
+        required: true
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/NoteBookResponse'
+      security:
+      - bearerAuth: []
+    post:
+      tags:
+      - notebook
+      summary: Add notebook
+      operationId: addNoteBook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoteBookModel'
+        required: true
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/NoteBookResponse'
+      security:
+      - bearerAuth: []
+    delete:
+      tags:
+      - notebook
+      summary: Delete notebook
+      operationId: deleteNoteBook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ByIdRequest'
+        required: true
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+      - bearerAuth: []
+  /api/users:
+    post:
+      tags:
+      - user
+      summary: Add user
+      operationId: addUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/User'
+      security:
+      - bearerAuth: []
+  /api/auth/signup:
+    post:
+      tags:
+      - login
+      summary: Sign up
+      operationId: signupUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+        required: true
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/auth/login:
+    post:
+      tags:
+      - login
+      summary: Login
+      operationId: loginUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/JwtAuthenticationResponse'
+  /api/users/{username}/getUserItems:
+    get:
+      tags:
+      - user
+      summary: "Get user all items(notebooks, notes, tags)"
+      operationId: getUserItems
+      parameters:
+      - name: username
+        in: path
+        description: Username
+        required: true
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+      security:
+      - bearerAuth: []
+  /api/users/isUsernameAvailable:
+    get:
+      tags:
+      - user
+      summary: Is username available
+      description: Check for availability of username
+      operationId: isUsernameAvailable
+      parameters:
+      - name: username
+        in: query
+        description: Username to check availability
+        required: true
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BooleanResponse'
+  /api/users/isEmailAvailable:
+    get:
+      tags:
+      - user
+      summary: Is e-Mail available
+      description: Check for availability of e-Mail
+      operationId: isEmailAvailable
+      parameters:
+      - name: email
+        in: query
+        description: e-Mail to check availability
+        required: true
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BooleanResponse'
+  /api/tags/notes:
+    get:
+      tags:
+      - tag
+      summary: Get tag and related notes
+      operationId: getTagNotes
+      parameters:
+      - name: id
+        in: query
+        description: Tag id
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NoteResponse'
+      security:
+      - bearerAuth: []
+  /api/noteBooks/notes:
+    get:
+      tags:
+      - notebook
+      summary: Get notebook notes
+      operationId: getNoteBookNotes
+      parameters:
+      - name: id
+        in: query
+        description: Notebook id
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponse'
+        "401":
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NoteResponse'
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    ExceptionResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        status:
+          type: integer
+          format: int32
+        messages:
+          type: array
+          items:
+            type: string
+        timestamp:
+          type: string
+          format: date-time
+    ApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+    NoteBookModel:
+      required:
+      - description
+      - name
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+        lastModifiedAt:
+          type: string
+          format: date-time
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotesModel'
+        user:
+          $ref: '#/components/schemas/User'
+      description: Notebook parameters
+    NotesModel:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+        lastModifiedAt:
+          type: string
+          format: date-time
+        id:
+          type: integer
+          format: int64
+        noteId:
+          type: string
+        topic:
+          type: string
+        text:
+          type: string
+        notebook:
+          $ref: '#/components/schemas/NoteBookModel'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagModel'
+      description: Note parameters
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          enum:
+          - ROLE_ADMIN
+          - ROLE_USER
+    TagModel:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+        lastModifiedAt:
+          type: string
+          format: date-time
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotesModel'
+        user:
+          $ref: '#/components/schemas/User'
+      description: Tag parameters
+    User:
+      required:
+      - email
+      - firstname
+      - lastname
+      - password
+      - username
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstname:
+          maxLength: 50
+          minLength: 0
+          type: string
+        lastname:
+          maxLength: 50
+          minLength: 0
+          type: string
+        username:
+          maxLength: 50
+          minLength: 0
+          type: string
+        password:
+          maxLength: 50
+          minLength: 0
+          type: string
+        email:
+          maxLength: 100
+          minLength: 0
+          type: string
+          writeOnly: true
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+        noteBooks:
+          type: array
+          items:
+            $ref: '#/components/schemas/NoteBookModel'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagModel'
+      description: User parameters
+    TagResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+    NoteBookResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/NoteResponse'
+    NoteResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        noteId:
+          type: string
+        topic:
+          type: string
+        text:
+          type: string
+        notebook:
+          $ref: '#/components/schemas/NoteBookResponse'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagResponse'
+    SignUpRequest:
+      required:
+      - email
+      - firstname
+      - lastname
+      - password
+      - username
+      type: object
+      properties:
+        firstname:
+          maxLength: 50
+          minLength: 2
+          type: string
+        lastname:
+          maxLength: 50
+          minLength: 2
+          type: string
+        username:
+          maxLength: 50
+          minLength: 4
+          type: string
+        password:
+          maxLength: 50
+          minLength: 6
+          type: string
+        email:
+          maxLength: 100
+          minLength: 4
+          type: string
+      description: User parameters
+    LoginRequest:
+      required:
+      - emailOrUsername
+      - password
+      type: object
+      properties:
+        emailOrUsername:
+          type: string
+        password:
+          type: string
+      description: Username or Email and Password
+    JwtAuthenticationResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        tokenType:
+          type: string
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstname:
+          type: string
+        lastname:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        notebooks:
+          type: array
+          items:
+            $ref: '#/components/schemas/NoteBookResponse'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagResponse'
+    BooleanResponse:
+      type: object
+      properties:
+        result:
+          type: boolean
+    ByIdRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+      description: Notebook id
+  securitySchemes:
+    bearerAuth:
+      type: http
+      in: header
+      scheme: bearer
+      bearerFormat: JWT

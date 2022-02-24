@@ -10,7 +10,7 @@ public interface NotesService {
 
     NotesModel updateNote(NotesModel note, UserPrincipal userPrincipal);
 
-    NotesModel getNote(ByIdRequest byIdRequest, UserPrincipal userPrincipal);
+    NotesModel getNote(Long id, UserPrincipal userPrincipal);
 
     ApiResponse deleteNote(ByIdRequest byIdRequest, UserPrincipal userPrincipal);
 }

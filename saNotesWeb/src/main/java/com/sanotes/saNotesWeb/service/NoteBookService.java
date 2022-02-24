@@ -14,7 +14,7 @@ public interface NoteBookService {
 
     NoteBookModel updateNoteBook(NoteBookModel noteBookModel, UserPrincipal userPrincipal);
 
-    List<NotesModel> getNotes(ByIdRequest byIdRequest,UserPrincipal userPrincipal);
+    List<NotesModel> getNotes(Long id,UserPrincipal userPrincipal);
 
     ApiResponse deleteNoteBook(ByIdRequest byIdRequest, UserPrincipal userPrincipal);
 }

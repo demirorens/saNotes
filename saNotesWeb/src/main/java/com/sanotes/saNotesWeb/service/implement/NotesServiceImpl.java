@@ -98,12 +98,12 @@ public class NotesServiceImpl implements NotesService {
         return newNote;
     }
 
-    public NotesModel getNote(ByIdRequest byIdRequest, UserPrincipal userPrincipal){
-        NotesModel  note = notesRepository.findById(byIdRequest.getId())
-                .orElseThrow(()->new ResourceNotFoundException("Note", "by id",byIdRequest.getId().toString()));
+    public NotesModel getNote(Long id, UserPrincipal userPrincipal){
+        NotesModel  note = notesRepository.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException("Note", "by id",id.toString()));
         Optional<NoteBookModel>  noteBook = noteBookRepository.findById(note.getNotebook().getId());
         if(noteBook.isEmpty()) {
-            throw new ResourceNotFoundException("Note", "by id",byIdRequest.getId().toString());
+            throw new ResourceNotFoundException("Note", "by id",id.toString());
         }else{
             note.setNotebook(noteBook.get());
             if(!noteBook.get().getUser().getId().equals(userPrincipal.getId())){
@@ -111,7 +111,7 @@ public class NotesServiceImpl implements NotesService {
             }
         }
         NotModel notModel = noteRepository.findById(note.getNoteId())
-                .orElseThrow(()->new ResourceNotFoundException("Note", "by id",byIdRequest.getId().toString()));
+                .orElseThrow(()->new ResourceNotFoundException("Note", "by id",id.toString()));
         note.setNoteId(notModel.getId());
         note.setTopic(notModel.getTopic());
         note.setText(notModel.getText());

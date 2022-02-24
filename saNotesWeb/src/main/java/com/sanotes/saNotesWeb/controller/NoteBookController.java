@@ -10,6 +10,7 @@ import com.sanotes.saNotesWeb.security.CurrentUser;
 import com.sanotes.saNotesWeb.security.UserPrincipal;
 import com.sanotes.saNotesWeb.service.NoteBookService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modelmapper.ModelMapper;
@@ -36,9 +37,13 @@ public class NoteBookController {
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    @Operation(summary = "Add notebook endpoint", security = @SecurityRequirement(name = "bearerAuth"))
-    public ResponseEntity<NoteBookResponse> addNoteBook(@Valid @RequestBody NoteBookModel noteBook,
-                                                        @CurrentUser UserPrincipal userPrincipal){
+    @Operation(summary = "Add notebook",
+            security = @SecurityRequirement(name = "bearerAuth"),
+            tags = {"notebook"})
+    public ResponseEntity<NoteBookResponse> addNoteBook(
+            @Parameter(description = "Notebook parameters", required = true)
+            @Valid @RequestBody NoteBookModel noteBook,
+            @CurrentUser UserPrincipal userPrincipal){
         NoteBookModel newNoteBook = noteBookService.saveNoteBook(noteBook,userPrincipal);
         NoteBookResponse noteBookResponse =modelMapper.map(newNoteBook, NoteBookResponse.class);
         return new ResponseEntity<>(noteBookResponse, HttpStatus.CREATED);
@@ -46,9 +51,13 @@ public class NoteBookController {
 
     @PutMapping
     @PreAuthorize("hasRole('USER')")
-    @Operation(summary = "Update notebook endpoint", security = @SecurityRequirement(name = "bearerAuth"))
-    public ResponseEntity<NoteBookResponse> updateNoteBook(@Valid @RequestBody NoteBookModel noteBook,
-                                                        @CurrentUser UserPrincipal userPrincipal){
+    @Operation(summary = "Update notebook",
+            security = @SecurityRequirement(name = "bearerAuth"),
+            tags = {"notebook"})
+    public ResponseEntity<NoteBookResponse> updateNoteBook(
+            @Parameter(description = "Notebook parameters", required = true)
+            @Valid @RequestBody NoteBookModel noteBook,
+            @CurrentUser UserPrincipal userPrincipal){
         NoteBookModel newNoteBook = noteBookService.updateNoteBook(noteBook,userPrincipal);
         NoteBookResponse noteBookResponse =modelMapper.map(newNoteBook, NoteBookResponse.class);
         return new ResponseEntity<>(noteBookResponse, HttpStatus.CREATED);
@@ -56,19 +65,27 @@ public class NoteBookController {
 
     @GetMapping("/notes")
     @PreAuthorize("hasRole('USER')")
-    @Operation(summary = "Get notebooks endpoint", security = @SecurityRequirement(name = "bearerAuth"))
-    public ResponseEntity<List<NoteResponse>> getNoteBookNotes(@Valid @RequestBody ByIdRequest byIdRequest,
-                                                          @CurrentUser UserPrincipal userPrincipal){
-        List<NotesModel> notes = noteBookService.getNotes(byIdRequest,userPrincipal);
+    @Operation(summary = "Get notebook notes",
+            security = @SecurityRequirement(name = "bearerAuth"),
+            tags = {"notebook"})
+    public ResponseEntity<List<NoteResponse>> getNoteBookNotes(
+            @Parameter(description = "Notebook id", required = true)
+            @RequestParam(value = "id") Long id,
+            @CurrentUser UserPrincipal userPrincipal){
+        List<NotesModel> notes = noteBookService.getNotes(id,userPrincipal);
         List<NoteResponse> noteResponses = Arrays.asList(modelMapper.map(notes, NoteResponse[].class));
         return new ResponseEntity<>(noteResponses, HttpStatus.OK);
     }
 
     @DeleteMapping
     @PreAuthorize("hasRole('USER')")
-    @Operation(summary = "Delete notebook endpoint", security = @SecurityRequirement(name = "bearerAuth"))
-    public ResponseEntity<ApiResponse> deleteNoteBook(@Valid @RequestBody ByIdRequest byIdRequest,
-                                                  @CurrentUser UserPrincipal userPrincipal){
+    @Operation(summary = "Delete notebook",
+            security = @SecurityRequirement(name = "bearerAuth"),
+            tags = {"notebook"})
+    public ResponseEntity<ApiResponse> deleteNoteBook(
+            @Parameter(description = "Notebook id", required = true)
+            @Valid @RequestBody ByIdRequest byIdRequest,
+            @CurrentUser UserPrincipal userPrincipal){
         ApiResponse apiResponse = noteBookService.deleteNoteBook(byIdRequest, userPrincipal);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }

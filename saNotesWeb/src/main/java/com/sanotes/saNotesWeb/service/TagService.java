@@ -14,7 +14,7 @@ public interface TagService {
 
     TagModel updateTag(TagModel tagModel, UserPrincipal userPrincipal);
 
-    List<NotesModel> getNotes(ByIdRequest byIdRequest, UserPrincipal userPrincipal);
+    List<NotesModel> getNotes(Long id, UserPrincipal userPrincipal);
 
     ApiResponse deleteTag(ByIdRequest byIdRequest, UserPrincipal userPrincipal);
 }

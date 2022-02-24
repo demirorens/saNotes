@@ -9,9 +9,6 @@ import com.sanotes.saNotesWeb.security.JwtTokenProvider;
 import com.sanotes.saNotesWeb.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,51 +34,41 @@ public class LoginController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UserService  userService;
+    private UserService userService;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    @Operation(summary = "Login", description = "", tags = { "login" })
-    @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(
-                    responseCode = "200", description = "Logged in",
-                    content = @Content(schema = @Schema(implementation = JwtAuthenticationResponse.class))) })
-    @PostMapping(value="/login", consumes = { "application/json", "application/xml" })
+    @Operation(summary = "Login", description = "", tags = {"login"})
+    @PostMapping(value = "/login", consumes = {"application/json", "application/xml"})
     public ResponseEntity<JwtAuthenticationResponse> loginUser(
-            @Parameter(description="Cannot null or empty.",
-                    required=true, schema=@Schema(implementation = LoginRequest.class))
-            @Valid @RequestBody LoginRequest loginRequest){
+            @Parameter(description = "Username or Email and Password", required = true)
+            @Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmailOrUsername(),loginRequest.getPassword())
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmailOrUsername(), loginRequest.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwtToken = jwtTokenProvider.generateToken(authentication);
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwtToken));
     }
 
-    @Operation(summary = "Sign up", description = "", tags = { "login" })
-    @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(
-                    responseCode = "201", description = "Account created",
-                    content = @Content(schema = @Schema(implementation = ApiResponse.class)))})
-    @PostMapping(value = "/signup", consumes = { "application/json", "application/xml" })
+    @Operation(summary = "Sign up", description = "", tags = {"login"})
+    @PostMapping(value = "/signup", consumes = {"application/json", "application/xml"})
     public ResponseEntity<ApiResponse> signupUser(
-            @Parameter(description="Cannot null or empty.",
-                    required=true, schema=@Schema(implementation = SignUpRequest.class))
-            @Valid @RequestBody SignUpRequest signUpRequest){
+            @Parameter(description = "User parameters", required = true)
+            @Valid @RequestBody SignUpRequest signUpRequest) {
         String firstName = signUpRequest.getFirstname();
         String lastName = signUpRequest.getLastname();
         String username = signUpRequest.getUsername();
         String email = signUpRequest.getEmail();
         String password = signUpRequest.getPassword();
-        User user = new User(firstName, lastName, username,password, email);
+        User user = new User(firstName, lastName, username, password, email);
 
         User result = userService.addUser(user);
 
-        URI  uri = ServletUriComponentsBuilder.fromCurrentContextPath()
+        URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/api/users/{userId}").buildAndExpand(result.getId()).toUri();
-        return ResponseEntity.created(uri).body(new ApiResponse(Boolean.TRUE,"User signed up successfully."));
+        return ResponseEntity.created(uri).body(new ApiResponse(Boolean.TRUE, "User signed up successfully."));
     }
 
 }

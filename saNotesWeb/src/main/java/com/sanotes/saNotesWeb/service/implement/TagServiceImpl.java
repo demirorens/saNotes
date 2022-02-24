@@ -50,9 +50,9 @@ public class TagServiceImpl implements TagService {
         return tagRepository.save(oldTagModel);
     }
 
-    public List<NotesModel> getNotes(ByIdRequest byIdRequest, UserPrincipal userPrincipal){
-        TagModel tag = tagRepository.findById(byIdRequest.getId())
-                .orElseThrow(()->new ResourceNotFoundException("Tag", "by id",byIdRequest.getId().toString()));
+    public List<NotesModel> getNotes(Long id, UserPrincipal userPrincipal){
+        TagModel tag = tagRepository.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException("Tag", "by id",id.toString()));
         if(!tag.getUser().getId().equals(userPrincipal.getId())){
             throw  new UnauthorizedException("User don't have permission for this request");
         }
