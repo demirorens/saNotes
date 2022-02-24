@@ -12,7 +12,6 @@ import com.sanotes.saNotesWeb.payload.ApiResponse;
 import com.sanotes.saNotesWeb.payload.ByIdRequest;
 import com.sanotes.saNotesWeb.security.UserPrincipal;
 import com.sanotes.saNotesWeb.service.NoteBookService;
-import com.sanotes.saNotesWeb.service.helper.NoteHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,9 +29,6 @@ public class NoteBookServiceImpl implements NoteBookService {
 
     @Autowired
     private NotesRepository notesRepository;
-
-    @Autowired
-    private NoteHelper noteHelper;
 
     public NoteBookModel saveNoteBook(NoteBookModel noteBookModel, UserPrincipal userPrincipal){
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(
@@ -58,7 +54,7 @@ public class NoteBookServiceImpl implements NoteBookService {
             throw  new UnauthorizedException("User don't have permission for this request");
         }
         List<NotesModel> notes= notesRepository.findByNotebook_Id(noteBookModel.getId());
-        return noteHelper.fillNotes(notes);
+        return notes;
     }
 
 

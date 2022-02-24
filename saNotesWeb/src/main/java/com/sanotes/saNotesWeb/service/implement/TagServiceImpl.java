@@ -12,7 +12,6 @@ import com.sanotes.saNotesWeb.payload.ApiResponse;
 import com.sanotes.saNotesWeb.payload.ByIdRequest;
 import com.sanotes.saNotesWeb.security.UserPrincipal;
 import com.sanotes.saNotesWeb.service.TagService;
-import com.sanotes.saNotesWeb.service.helper.NoteHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,9 +28,6 @@ public class TagServiceImpl implements TagService {
 
     @Autowired
     private NotesRepository notesRepository;
-
-    @Autowired
-    private NoteHelper noteHelper;
 
     public TagModel saveTag(TagModel tagModel, UserPrincipal userPrincipal){
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(
@@ -57,7 +53,7 @@ public class TagServiceImpl implements TagService {
             throw  new UnauthorizedException("User don't have permission for this request");
         }
         List<NotesModel> notes= notesRepository.findByTags_Id(tag.getId());
-        return noteHelper.fillNotes(notes);
+        return notes;
     }
 
     public ApiResponse deleteTag(ByIdRequest byIdRequest, UserPrincipal userPrincipal) {
