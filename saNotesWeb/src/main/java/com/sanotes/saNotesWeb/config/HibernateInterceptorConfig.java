@@ -11,11 +11,11 @@ import java.util.Map;
 public class HibernateInterceptorConfig implements HibernatePropertiesCustomizer {
 
     @Autowired
-    Interceptor noteInterceptor;
+    Interceptor newUserInterceptor;
 
     @Override
     public void customize(Map<String, Object> hibernateProperties) {
-        hibernateProperties.put("hibernate.ejb.interceptor", noteInterceptor);
+        hibernateProperties.put("hibernate.ejb.interceptor", newUserInterceptor);
     }
 
 }

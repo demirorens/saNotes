@@ -7,24 +7,27 @@ import com.sanotes.saNotesCommons.model.audit.UserAudit;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
-@Table(name="notes",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"note_id"})})
-@JsonIdentityInfo(scope = NotesModel.class,
+@Table(name = "notes_version",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"id", "note_id"})})
+@JsonIdentityInfo(scope = NotesVersionModel.class,
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
-public class NotesModel extends UserAudit {
+public class NotesVersionModel extends UserAudit {
 
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long version_id;
+
+    @Column(name = "id", nullable = false)
+    @NaturalId
     private Long id;
 
     @Column(name = "note_id", nullable = false)
-    @NaturalId(mutable = true)
+    @NaturalId
     private String noteId;
 
     @Transient
@@ -38,17 +41,15 @@ public class NotesModel extends UserAudit {
     private NoteBookModel notebook;
 
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-    @JoinTable(name = "note_tags",
-            joinColumns = @JoinColumn(name = "note_id",referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id",referencedColumnName = "id") )
-    private List<TagModel> tags;
-
-    public NotesModel() {
+    public NotesVersionModel() {
     }
 
-    public NotesModel(String noteId) {
-        this.noteId = noteId;
+    public Long getVersion_id() {
+        return version_id;
+    }
+
+    public void setVersion_id(Long version_id) {
+        this.version_id = version_id;
     }
 
     @JsonBackReference
@@ -58,14 +59,6 @@ public class NotesModel extends UserAudit {
 
     public void setNotebook(NoteBookModel notebook) {
         this.notebook = notebook;
-    }
-
-    public List<TagModel> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<TagModel> tags) {
-        this.tags = tags;
     }
 
     public Long getId() {

@@ -31,6 +31,9 @@ public class UserPrincipal implements UserDetails {
 
     Collection<? extends GrantedAuthority> authorities;
 
+    public UserPrincipal() {
+    }
+
     public UserPrincipal(Long id, String firstname, String lastname, String email,
                          String username, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
@@ -39,14 +42,14 @@ public class UserPrincipal implements UserDetails {
         this.email = email;
         this.username = username;
         this.password = password;
-        if(authorities == null)
+        if (authorities == null)
             this.authorities = null;
         else
             this.authorities = new ArrayList<>(authorities);
     }
 
-    public static UserPrincipal create(User user){
-        List<GrantedAuthority> authorities=user.getRoles().stream()
+    public static UserPrincipal create(User user) {
+        List<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name())).collect(Collectors.toList());
 
         return new UserPrincipal(user.getId(), user.getFirstname(), user.getLastname(), user.getEmail(),
@@ -83,6 +86,7 @@ public class UserPrincipal implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

@@ -1,6 +1,7 @@
 package com.sanotes.saNotesWeb.controller;
 
 import com.sanotes.saNotesCommons.model.NotesModel;
+import com.sanotes.saNotesCommons.model.NotesVersionModel;
 import com.sanotes.saNotesWeb.payload.ApiResponse;
 import com.sanotes.saNotesWeb.payload.ByIdRequest;
 import com.sanotes.saNotesWeb.payload.NoteResponse;
@@ -9,9 +10,11 @@ import com.sanotes.saNotesWeb.security.UserPrincipal;
 import com.sanotes.saNotesWeb.service.NotesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/notes")
@@ -69,7 +73,21 @@ public class NotesController {
             @CurrentUser UserPrincipal userPrincipal){
         NotesModel note = notesService.getNote(id, userPrincipal);
         NoteResponse noteResponse =modelMapper.map(note, NoteResponse.class);
-        return new ResponseEntity<>(noteResponse, HttpStatus.FOUND);
+        return new ResponseEntity<>(noteResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/versions")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(summary = "Get note versions",
+            security = @SecurityRequirement(name = "bearerAuth"),
+            tags = {"notes"})
+    public ResponseEntity<List<NoteResponse>> getNoteVersions(
+            @Parameter(description = "Note id", required = true)
+            @RequestParam(value = "id") Long id,
+            @CurrentUser UserPrincipal userPrincipal){
+        List<NotesVersionModel> notesVersions = notesService.getNoteVersions(id, userPrincipal);
+        List<NoteResponse> noteResponses =modelMapper.map(notesVersions,  new TypeToken<List<NoteResponse>>() {}.getType());
+        return new ResponseEntity<>(noteResponses, HttpStatus.OK);
     }
 
     @DeleteMapping

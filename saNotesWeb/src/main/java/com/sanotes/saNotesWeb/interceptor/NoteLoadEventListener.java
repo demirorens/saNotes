@@ -2,6 +2,7 @@ package com.sanotes.saNotesWeb.interceptor;
 
 import com.sanotes.saNotesCommons.model.NotModel;
 import com.sanotes.saNotesCommons.model.NotesModel;
+import com.sanotes.saNotesCommons.model.NotesVersionModel;
 import com.sanotes.saNotesMongo.DAO.NoteRepository;
 import com.sanotes.saNotesWeb.exception.ResourceNotFoundException;
 import org.hibernate.event.service.spi.EventListenerRegistry;
@@ -43,7 +44,15 @@ public class NoteLoadEventListener implements PostLoadEventListener {
                 ((NotesModel) entity).setTopic(notModel.getTopic());
                 ((NotesModel) entity).setText(notModel.getText());
             }
-            System.out.println("NotesModel");
+        } else if (entity instanceof NotesVersionModel) {
+            if (((NotesVersionModel) entity).getNoteId() != null &&
+                    (((NotesVersionModel) entity).getTopic() == null && ((NotesVersionModel) entity).getText() == null)
+            ) {
+                NotModel notModel = noteRepository.findById(((NotesVersionModel) entity).getNoteId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Note", "by id", ((NotesVersionModel) entity).getNoteId()));
+                ((NotesVersionModel) entity).setTopic(notModel.getTopic());
+                ((NotesVersionModel) entity).setText(notModel.getText());
+            }
         }
     }
 

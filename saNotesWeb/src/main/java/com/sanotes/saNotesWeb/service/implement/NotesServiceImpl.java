@@ -1,23 +1,24 @@
 package com.sanotes.saNotesWeb.service.implement;
 
+import com.sanotes.saNotesCommons.model.*;
 import com.sanotes.saNotesMongo.DAO.NoteRepository;
-import com.sanotes.saNotesCommons.model.NotModel;
 import com.sanotes.saNotesPostgres.service.DAO.NoteBookRepository;
 import com.sanotes.saNotesPostgres.service.DAO.NotesRepository;
+import com.sanotes.saNotesPostgres.service.DAO.NotesVersionRepository;
 import com.sanotes.saNotesPostgres.service.DAO.TagRepository;
-import com.sanotes.saNotesCommons.model.NoteBookModel;
-import com.sanotes.saNotesCommons.model.NotesModel;
-import com.sanotes.saNotesCommons.model.TagModel;
 import com.sanotes.saNotesCommons.model.user.User;
 import com.sanotes.saNotesWeb.exception.ResourceNotFoundException;
 import com.sanotes.saNotesWeb.exception.UnauthorizedException;
 import com.sanotes.saNotesWeb.payload.ApiResponse;
 import com.sanotes.saNotesWeb.payload.ByIdRequest;
+import com.sanotes.saNotesWeb.payload.NoteResponse;
 import com.sanotes.saNotesWeb.security.UserPrincipal;
 import com.sanotes.saNotesWeb.service.NotesService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,10 +31,16 @@ public class NotesServiceImpl implements NotesService {
     private NotesRepository notesRepository;
 
     @Autowired
+    private NotesVersionRepository notesVersionRepository;
+
+    @Autowired
     private NoteBookRepository noteBookRepository;
 
     @Autowired
     private TagRepository tagRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
 
 
@@ -48,7 +55,7 @@ public class NotesServiceImpl implements NotesService {
                 throw  new UnauthorizedException("User don't have permission for this request");
             }
         }
-        for (int i = 0; i < note.getTags().size(); i++) {
+        for (int i = 0; i < (note.getTags()!=null?note.getTags().size():0); i++) {
             Optional<TagModel>  tagModel = tagRepository.findByName(note.getTags().get(i).getName());
             if(tagModel.isEmpty()) {
                 note.getTags().set(i,tagRepository.save(note.getTags().get(i)));
@@ -68,7 +75,7 @@ public class NotesServiceImpl implements NotesService {
     public NotesModel updateNote(NotesModel note, UserPrincipal userPrincipal){
         NotesModel  oldNote = notesRepository.findById(note.getId())
                 .orElseThrow(()->new ResourceNotFoundException("Note", "by id",note.getId().toString()));
-        Optional<NoteBookModel>  noteBook = noteBookRepository.findById(note.getNotebook().getId());
+        Optional<NoteBookModel>  noteBook = noteBookRepository.findById(oldNote.getNotebook().getId());
         if(noteBook.isEmpty()) {
             throw new ResourceNotFoundException("Note", "by id",note.getId().toString());
         }else{
@@ -77,7 +84,7 @@ public class NotesServiceImpl implements NotesService {
                 throw  new UnauthorizedException("User don't have permission for this request");
             }
         }
-        for (int i = 0; i < note.getTags().size(); i++) {
+        for (int i = 0; i < (note.getTags()!=null?note.getTags().size():0); i++) {
             Optional<TagModel>  tagModel = tagRepository.findByName(note.getTags().get(i).getName());
             User user = new User();
             user.setId(userPrincipal.getId());
@@ -88,13 +95,17 @@ public class NotesServiceImpl implements NotesService {
                 note.getTags().set(i,tagModel.get());
             }
         }
+       NotesVersionModel notesVersion = modelMapper.map(oldNote, NotesVersionModel.class);
         NotModel notModel = new NotModel(note.getTopic(),note.getText());
-        notModel.setId(note.getNoteId());
+        //notModel.setId(note.getNoteId());
         notModel = noteRepository.save(notModel);
         note.setNoteId(notModel.getId());
         NotesModel  newNote = notesRepository.save(note);
         newNote.setTopic(notModel.getTopic());
         newNote.setText(notModel.getText());
+        /******Save old version begin ******/
+        notesVersionRepository.save(notesVersion);
+        /******Save old version end ******/
         return newNote;
     }
 
@@ -116,6 +127,23 @@ public class NotesServiceImpl implements NotesService {
         note.setTopic(notModel.getTopic());
         note.setText(notModel.getText());
         return  note;
+    }
+
+    public List<NotesVersionModel> getNoteVersions(Long id, UserPrincipal userPrincipal){
+        List<NotesVersionModel>  noteversions = notesVersionRepository.getVersionsByNotesId(id);
+        if(noteversions.size()>0) {
+            NotesVersionModel notesVersion = noteversions.get(0);
+            Optional<NoteBookModel> noteBook = noteBookRepository.findById(notesVersion.getNotebook().getId());
+            if (noteBook.isEmpty()) {
+                throw new ResourceNotFoundException("Note", "by id", id.toString());
+            } else {
+                notesVersion.setNotebook(noteBook.get());
+                if (!noteBook.get().getUser().getId().equals(userPrincipal.getId())) {
+                    throw new UnauthorizedException("User don't have permission for this request");
+                }
+            }
+        }
+        return  noteversions;
     }
 
 
