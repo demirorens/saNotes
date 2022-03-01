@@ -18,6 +18,8 @@
     <properties>
         <java.version>11</java.version>
         <springboot.version>2.5.5</springboot.version>
+        <sonar.organization>demirorens</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <modules>
