@@ -30,11 +30,7 @@ public class NewUserListener {
     @Async
     @EventListener
     public void listen(NewUserEvent event) {
-        /*try {
-            TimeUnit.MILLISECONDS.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
+
         User user = event.getUser();
         if (user.getId() > 0) {
             //Create sampla Notebook and note

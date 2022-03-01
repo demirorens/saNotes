@@ -44,6 +44,15 @@ public class NotesVersionModel extends UserAudit {
     public NotesVersionModel() {
     }
 
+    public NotesVersionModel(NotesModel notesModel) {
+        this.id = notesModel.getId();
+        this.noteId = notesModel.getNoteId();
+        this.topic = notesModel.getTopic();
+        this.text = notesModel.getText();
+        this.notebook = notesModel.getNotebook();
+
+    }
+
     public Long getVersion_id() {
         return version_id;
     }

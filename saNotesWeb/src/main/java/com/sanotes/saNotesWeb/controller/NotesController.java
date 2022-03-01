@@ -22,6 +22,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -86,7 +87,7 @@ public class NotesController {
             @RequestParam(value = "id") Long id,
             @CurrentUser UserPrincipal userPrincipal){
         List<NotesVersionModel> notesVersions = notesService.getNoteVersions(id, userPrincipal);
-        List<NoteResponse> noteResponses =modelMapper.map(notesVersions,  new TypeToken<List<NoteResponse>>() {}.getType());
+        List<NoteResponse> noteResponses = Arrays.asList(modelMapper.map(notesVersions, NoteResponse[].class));
         return new ResponseEntity<>(noteResponses, HttpStatus.OK);
     }
 

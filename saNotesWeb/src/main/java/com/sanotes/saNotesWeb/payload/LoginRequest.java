@@ -9,6 +9,14 @@ public class LoginRequest {
     @NotBlank
     private String password;
 
+    public LoginRequest(){}
+
+    public LoginRequest(String emailOrUsername,String password){
+        this.emailOrUsername = emailOrUsername;
+        this.password = password;
+    }
+
+
     public String getEmailOrUsername() {
         return emailOrUsername;
     }

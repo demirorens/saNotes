@@ -47,6 +47,14 @@ public class NotesModel extends UserAudit {
     public NotesModel() {
     }
 
+    public NotesModel( Long id, String noteId, String topic, String text, NoteBookModel notebook) {
+        this.id = id;
+        this.noteId = noteId;
+        this.topic = topic;
+        this.text = text;
+        this.notebook = notebook;
+    }
+
     public NotesModel(String noteId) {
         this.noteId = noteId;
     }

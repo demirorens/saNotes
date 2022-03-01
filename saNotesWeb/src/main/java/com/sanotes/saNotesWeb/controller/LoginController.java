@@ -67,7 +67,7 @@ public class LoginController {
         User result = userService.addUser(user);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/users/{userId}").buildAndExpand(result.getId()).toUri();
+                .path("/api/users/{username}/getUserItems").buildAndExpand(result.getUsername()).toUri();
         return ResponseEntity.created(uri).body(new ApiResponse(Boolean.TRUE, "User signed up successfully."));
     }
 
