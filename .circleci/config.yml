@@ -1,4 +1,4 @@
-# Java Maven CircleCI 2.0 configuration file
+# Java Maven CircleCI 2.1 configuration file
 #
 # Check https://circleci.com/docs/2.0/language-java/ for more details
 #
@@ -8,6 +8,11 @@ jobs:
     docker:
       # specify the version you desire here
       - image: 'circleci/openjdk:11-jdk'
+      - image: 'circleci/postgres:alpine'
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: sanotes
+      - image: 'circleci/mongodb:latest'
 
     working_directory: ~/repo
 
@@ -16,6 +21,12 @@ jobs:
       MAVEN_OPTS: -Xmx3200m
 
     steps:
+      - run:
+          name: Wait for Postgres to start
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run:
+          name: Waiting for Mongo
+          command: dockerize -wait tcp://localhost:27017 -timeout 1m
       - checkout
 
       # Download and cache dependencies
@@ -31,6 +42,7 @@ jobs:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
+
 
       # run tests!
       - run: mvn integration-test
