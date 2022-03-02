@@ -8,11 +8,11 @@ jobs:
     docker:
       # specify the version you desire here
       - image: 'circleci/openjdk:11-jdk'
-      - image: 'circleci/postgres:alpine'
+      - image: 'circleci/postgres:14.1.0'
         environment:
           POSTGRES_USER: postgres
           POSTGRES_DB: sanotes
-      - image: 'circleci/mongodb:latest'
+      - image: 'circleci/mongodb:3.6'
 
     working_directory: ~/repo
 
