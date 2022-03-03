@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 
 public class ResponseEntityErrorException extends RuntimeException{
     private static final long serialVersionUID = 1L;
-    private ResponseEntity<ApiResponse> response;
+    private final transient ResponseEntity<ApiResponse> response;
 
     public ResponseEntityErrorException(ResponseEntity<ApiResponse> response) {
         this.response = response;
@@ -13,9 +13,5 @@ public class ResponseEntityErrorException extends RuntimeException{
 
     public ResponseEntity<ApiResponse> getResponse() {
         return response;
-    }
-
-    public void setResponse(ResponseEntity<ApiResponse> response) {
-        this.response = response;
     }
 }

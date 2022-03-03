@@ -26,7 +26,7 @@ import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @Tag(name = "login", description = "the Login API")
 public class LoginController {
 
@@ -65,10 +65,7 @@ public class LoginController {
         User user = new User(firstName, lastName, username, password, email);
 
         User result = userService.addUser(user);
-
-        URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/users/{username}/getUserItems").buildAndExpand(result.getUsername()).toUri();
-        return ResponseEntity.created(uri).body(new ApiResponse(Boolean.TRUE, "User signed up successfully."));
+        return ResponseEntity.ok(new ApiResponse(Boolean.TRUE, "User signed up successfully."));
     }
 
 }

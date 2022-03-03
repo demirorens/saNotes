@@ -1,7 +1,10 @@
 package com.sanotes.web.controller;
 
 import com.sanotes.commons.model.user.User;
-import com.sanotes.web.payload.*;
+import com.sanotes.web.payload.ApiResponse;
+import com.sanotes.web.payload.BooleanResponse;
+import com.sanotes.web.payload.UserRequest;
+import com.sanotes.web.payload.UserResponse;
 import com.sanotes.web.security.CurrentUser;
 import com.sanotes.web.security.UserPrincipal;
 import com.sanotes.web.service.UserService;
@@ -9,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +22,15 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("$/api/v1/user")
 @Tag(name = "user", description = "the User API")
 public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Operation(summary = "Is username available",
             description = "Check for availability of username",
@@ -52,11 +59,13 @@ public class UserController {
             tags = {"user"})
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> addUser(
+    public ResponseEntity<UserResponse> addUser(
             @Parameter(description = "User parameters", required = true)
-            @Valid @RequestBody User user) {
-        User newUser = userService.addUser(user);
-        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+            @Valid @RequestBody UserRequest user) {
+        User newUser = new User(user.getFirstname(), user.getLastname(), user.getUsername(), user.getPassword(), user.getEmail());
+        newUser = userService.addUser(newUser);
+        UserResponse userResponse = modelMapper.map(newUser, UserResponse.class);
+        return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
     }
 
 
@@ -65,14 +74,16 @@ public class UserController {
             tags = {"user"})
     @PutMapping("/{username}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<User> updateUser(
+    public ResponseEntity<UserResponse> updateUser(
             @Parameter(description = "Firstname, lastname and Password are updateable", required = true)
-            @Valid @RequestBody User user,
+            @Valid @RequestBody UserRequest user,
             @Parameter(description = "Username", required = true)
             @PathVariable(value = "username") String username,
             @CurrentUser UserPrincipal userPrincipal) {
-        User newUser = userService.updateUser(user, username, userPrincipal);
-        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+        User newUser = new User(user.getFirstname(), user.getLastname(), username, user.getPassword(), user.getEmail());
+        newUser = userService.updateUser(newUser, username, userPrincipal);
+        UserResponse userResponse = modelMapper.map(newUser, UserResponse.class);
+        return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{username}")

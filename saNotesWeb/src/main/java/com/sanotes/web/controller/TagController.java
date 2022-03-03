@@ -2,10 +2,7 @@ package com.sanotes.web.controller;
 
 import com.sanotes.commons.model.NotesModel;
 import com.sanotes.commons.model.TagModel;
-import com.sanotes.web.payload.ApiResponse;
-import com.sanotes.web.payload.ByIdRequest;
-import com.sanotes.web.payload.NoteResponse;
-import com.sanotes.web.payload.TagResponse;
+import com.sanotes.web.payload.*;
 import com.sanotes.web.security.CurrentUser;
 import com.sanotes.web.security.UserPrincipal;
 import com.sanotes.web.service.TagService;
@@ -25,7 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/tags")
+@RequestMapping("/api/v1/tag")
 @Tag(name = "tag", description = "the Tag API")
 public class TagController {
 
@@ -42,10 +39,11 @@ public class TagController {
             tags = {"tag"})
     public ResponseEntity<TagResponse> addTag(
             @Parameter(description = "Tag parameters", required = true)
-            @Valid @RequestBody TagModel tag,
+            @Valid @RequestBody TagRequest tag,
             @CurrentUser UserPrincipal userPrincipal) {
-        TagModel newTag = tagService.saveTag(tag, userPrincipal);
-        TagResponse tagResponse = modelMapper.map(newTag, TagResponse.class);
+        TagModel tagModel = new TagModel(tag.getName(), tag.getDescription());
+        tagModel = tagService.saveTag(tagModel, userPrincipal);
+        TagResponse tagResponse = modelMapper.map(tagModel, TagResponse.class);
         return new ResponseEntity<>(tagResponse, HttpStatus.CREATED);
     }
 
@@ -56,10 +54,12 @@ public class TagController {
             tags = {"tag"})
     public ResponseEntity<TagResponse> updateTag(
             @Parameter(description = "Tag parameters", required = true)
-            @Valid @RequestBody TagModel tag,
+            @Valid @RequestBody TagRequest tag,
             @CurrentUser UserPrincipal userPrincipal) {
-        TagModel newTag = tagService.updateTag(tag, userPrincipal);
-        TagResponse tagResponse = modelMapper.map(newTag, TagResponse.class);
+        TagModel tagModel = new TagModel(tag.getName(), tag.getDescription());
+        tagModel.setId(tag.getId());
+        tagModel = tagService.updateTag(tagModel, userPrincipal);
+        TagResponse tagResponse = modelMapper.map(tagModel, TagResponse.class);
         return new ResponseEntity<>(tagResponse, HttpStatus.CREATED);
     }
 

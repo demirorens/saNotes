@@ -10,7 +10,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="notes",
+@Table(name = "notes",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"note_id"})})
 @JsonIdentityInfo(scope = NotesModel.class,
         generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -40,14 +40,14 @@ public class NotesModel extends UserAudit {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinTable(name = "note_tags",
-            joinColumns = @JoinColumn(name = "note_id",referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id",referencedColumnName = "id") )
+            joinColumns = @JoinColumn(name = "note_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
     private List<TagModel> tags;
 
     public NotesModel() {
     }
 
-    public NotesModel( Long id, String noteId, String topic, String text, NoteBookModel notebook) {
+    public NotesModel(Long id, String noteId, String topic, String text, NoteBookModel notebook) {
         this.id = id;
         this.noteId = noteId;
         this.topic = topic;
@@ -55,8 +55,9 @@ public class NotesModel extends UserAudit {
         this.notebook = notebook;
     }
 
-    public NotesModel(String noteId) {
-        this.noteId = noteId;
+    public NotesModel(String topic, String text) {
+        this.topic = topic;
+        this.text = text;
     }
 
     @JsonBackReference

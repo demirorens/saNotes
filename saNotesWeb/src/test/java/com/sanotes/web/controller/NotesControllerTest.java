@@ -79,7 +79,7 @@ class NotesControllerTest {
                 .thenReturn(modelMapper.map(note, NoteResponse.class));
         MediaType MEDIA_TYPE_JSON_UTF8 =
                 new MediaType("application", "json", java.nio.charset.Charset.forName("UTF-8"));
-        MockHttpServletRequestBuilder request = post("/api/notes");
+        MockHttpServletRequestBuilder request = post("/api/v1/notes");
         request.content(mapper.writeValueAsString(note));
         request.accept(MEDIA_TYPE_JSON_UTF8);
         request.contentType(MEDIA_TYPE_JSON_UTF8);
@@ -99,7 +99,7 @@ class NotesControllerTest {
         when(modelMapperM.map(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(modelMapper.map(note, NoteResponse.class));
         MediaType MEDIA_TYPE_JSON_UTF8 = new MediaType("application", "json", java.nio.charset.Charset.forName("UTF-8"));
-        MockHttpServletRequestBuilder request = put("/api/notes");
+        MockHttpServletRequestBuilder request = put("/api/v1/notes");
         request.content(mapper.writeValueAsString(note));
         request.accept(MEDIA_TYPE_JSON_UTF8);
         request.contentType(MEDIA_TYPE_JSON_UTF8);
@@ -120,7 +120,7 @@ class NotesControllerTest {
                 .thenReturn(modelMapper.map(note, NoteResponse.class));
         MediaType MEDIA_TYPE_JSON_UTF8 =
                 new MediaType("application", "json", java.nio.charset.Charset.forName("UTF-8"));
-        MockHttpServletRequestBuilder request = get("/api/notes");
+        MockHttpServletRequestBuilder request = get("/api/v1/notes");
         request.param("id", "1");
         request.accept(MEDIA_TYPE_JSON_UTF8);
         request.contentType(MEDIA_TYPE_JSON_UTF8);
@@ -141,7 +141,7 @@ class NotesControllerTest {
                 .thenReturn(modelMapper.map(noteVersions, NoteResponse[].class));
         MediaType MEDIA_TYPE_JSON_UTF8 =
                 new MediaType("application", "json", java.nio.charset.Charset.forName("UTF-8"));
-        MockHttpServletRequestBuilder request = get("/api/notes/versions");
+        MockHttpServletRequestBuilder request = get("/api/v1/notes/versions");
         request.param("id", "1");
         request.accept(MEDIA_TYPE_JSON_UTF8);
         request.contentType(MEDIA_TYPE_JSON_UTF8);
@@ -162,7 +162,7 @@ class NotesControllerTest {
                 .thenReturn(new ApiResponse(true, "success"));
         MediaType MEDIA_TYPE_JSON_UTF8 =
                 new MediaType("application", "json", java.nio.charset.Charset.forName("UTF-8"));
-        MockHttpServletRequestBuilder request = delete("/api/notes");
+        MockHttpServletRequestBuilder request = delete("/api/v1/notes");
         request.content(mapper.writeValueAsString(new ByIdRequest(1l)));
         request.accept(MEDIA_TYPE_JSON_UTF8);
         request.contentType(MEDIA_TYPE_JSON_UTF8);

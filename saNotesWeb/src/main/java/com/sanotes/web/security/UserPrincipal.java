@@ -29,7 +29,7 @@ public class UserPrincipal implements UserDetails {
     @JsonIgnore
     private String password;
 
-    Collection<? extends GrantedAuthority> authorities;
+    transient Collection<? extends GrantedAuthority> authorities;
 
     public UserPrincipal() {
     }

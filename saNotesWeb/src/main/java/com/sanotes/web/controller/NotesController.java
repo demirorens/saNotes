@@ -4,6 +4,7 @@ import com.sanotes.commons.model.NotesModel;
 import com.sanotes.commons.model.NotesVersionModel;
 import com.sanotes.web.payload.ApiResponse;
 import com.sanotes.web.payload.ByIdRequest;
+import com.sanotes.web.payload.NoteRequest;
 import com.sanotes.web.payload.NoteResponse;
 import com.sanotes.web.security.CurrentUser;
 import com.sanotes.web.security.UserPrincipal;
@@ -24,7 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/notes")
+@RequestMapping("/api/v1/note")
 @Tag(name = "notes", description = "the Note API")
 public class NotesController {
 
@@ -40,10 +41,11 @@ public class NotesController {
             tags = {"notes"})
     public ResponseEntity<NoteResponse> addNote(
             @Parameter(description = "Note parameters", required = true)
-            @Valid @RequestBody NotesModel note,
-            @CurrentUser UserPrincipal userPrincipal){
-        NotesModel newNote = notesService.saveNote(note,userPrincipal);
-        NoteResponse noteResponse =modelMapper.map(newNote, NoteResponse.class);
+            @Valid @RequestBody NoteRequest note,
+            @CurrentUser UserPrincipal userPrincipal) {
+        NotesModel notesModel = new NotesModel(note.getTopic(), note.getText());
+        notesModel = notesService.saveNote(notesModel, userPrincipal);
+        NoteResponse noteResponse = modelMapper.map(notesModel, NoteResponse.class);
         return new ResponseEntity<>(noteResponse, HttpStatus.CREATED);
     }
 
@@ -54,10 +56,13 @@ public class NotesController {
             tags = {"notes"})
     public ResponseEntity<NoteResponse> updateNote(
             @Parameter(description = "Note parameters", required = true)
-            @Valid @RequestBody NotesModel note,
-            @CurrentUser UserPrincipal userPrincipal){
-        NotesModel newNote = notesService.updateNote(note,userPrincipal);
-        NoteResponse noteResponse =modelMapper.map(newNote, NoteResponse.class);
+            @Valid @RequestBody NoteRequest note,
+            @CurrentUser UserPrincipal userPrincipal) {
+        NotesModel notesModel = new NotesModel(note.getTopic(), note.getText());
+        notesModel.setId(note.getId());
+        notesModel.setNoteId(note.getNoteId());
+        notesModel = notesService.updateNote(notesModel, userPrincipal);
+        NoteResponse noteResponse = modelMapper.map(notesModel, NoteResponse.class);
         return new ResponseEntity<>(noteResponse, HttpStatus.CREATED);
     }
 
@@ -69,9 +74,9 @@ public class NotesController {
     public ResponseEntity<NoteResponse> getNote(
             @Parameter(description = "Note id", required = true)
             @RequestParam(value = "id") Long id,
-            @CurrentUser UserPrincipal userPrincipal){
+            @CurrentUser UserPrincipal userPrincipal) {
         NotesModel note = notesService.getNote(id, userPrincipal);
-        NoteResponse noteResponse =modelMapper.map(note, NoteResponse.class);
+        NoteResponse noteResponse = modelMapper.map(note, NoteResponse.class);
         return new ResponseEntity<>(noteResponse, HttpStatus.OK);
     }
 
@@ -83,7 +88,7 @@ public class NotesController {
     public ResponseEntity<List<NoteResponse>> getNoteVersions(
             @Parameter(description = "Note id", required = true)
             @RequestParam(value = "id") Long id,
-            @CurrentUser UserPrincipal userPrincipal){
+            @CurrentUser UserPrincipal userPrincipal) {
         List<NotesVersionModel> notesVersions = notesService.getNoteVersions(id, userPrincipal);
         List<NoteResponse> noteResponses = Arrays.asList(modelMapper.map(notesVersions, NoteResponse[].class));
         return new ResponseEntity<>(noteResponses, HttpStatus.OK);
@@ -97,7 +102,7 @@ public class NotesController {
     public ResponseEntity<ApiResponse> deleteNote(
             @Parameter(description = "Note id", required = true)
             @Valid @RequestBody ByIdRequest byIdRequest,
-            @CurrentUser UserPrincipal userPrincipal){
+            @CurrentUser UserPrincipal userPrincipal) {
         ApiResponse apiResponse = notesService.deleteNote(byIdRequest, userPrincipal);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }

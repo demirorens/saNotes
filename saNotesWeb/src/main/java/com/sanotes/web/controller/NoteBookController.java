@@ -2,10 +2,7 @@ package com.sanotes.web.controller;
 
 import com.sanotes.commons.model.NoteBookModel;
 import com.sanotes.commons.model.NotesModel;
-import com.sanotes.web.payload.ApiResponse;
-import com.sanotes.web.payload.ByIdRequest;
-import com.sanotes.web.payload.NoteBookResponse;
-import com.sanotes.web.payload.NoteResponse;
+import com.sanotes.web.payload.*;
 import com.sanotes.web.security.CurrentUser;
 import com.sanotes.web.security.UserPrincipal;
 import com.sanotes.web.service.NoteBookService;
@@ -25,7 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/noteBooks")
+@RequestMapping("/api/v1/noteBook")
 @Tag(name = "notebook", description = "the Notebook API")
 public class NoteBookController {
 
@@ -42,10 +39,11 @@ public class NoteBookController {
             tags = {"notebook"})
     public ResponseEntity<NoteBookResponse> addNoteBook(
             @Parameter(description = "Notebook parameters", required = true)
-            @Valid @RequestBody NoteBookModel noteBook,
-            @CurrentUser UserPrincipal userPrincipal){
-        NoteBookModel newNoteBook = noteBookService.saveNoteBook(noteBook,userPrincipal);
-        NoteBookResponse noteBookResponse =modelMapper.map(newNoteBook, NoteBookResponse.class);
+            @Valid @RequestBody NoteBookRequest noteBook,
+            @CurrentUser UserPrincipal userPrincipal) {
+        NoteBookModel noteBookModel = new NoteBookModel(noteBook.getName(), noteBook.getDescription());
+        noteBookModel = noteBookService.saveNoteBook(noteBookModel, userPrincipal);
+        NoteBookResponse noteBookResponse = modelMapper.map(noteBookModel, NoteBookResponse.class);
         return new ResponseEntity<>(noteBookResponse, HttpStatus.CREATED);
     }
 
@@ -56,10 +54,12 @@ public class NoteBookController {
             tags = {"notebook"})
     public ResponseEntity<NoteBookResponse> updateNoteBook(
             @Parameter(description = "Notebook parameters", required = true)
-            @Valid @RequestBody NoteBookModel noteBook,
-            @CurrentUser UserPrincipal userPrincipal){
-        NoteBookModel newNoteBook = noteBookService.updateNoteBook(noteBook,userPrincipal);
-        NoteBookResponse noteBookResponse =modelMapper.map(newNoteBook, NoteBookResponse.class);
+            @Valid @RequestBody NoteBookRequest noteBook,
+            @CurrentUser UserPrincipal userPrincipal) {
+        NoteBookModel noteBookModel = new NoteBookModel(noteBook.getName(), noteBook.getDescription());
+        noteBookModel.setId(noteBook.getId());
+        noteBookModel = noteBookService.updateNoteBook(noteBookModel, userPrincipal);
+        NoteBookResponse noteBookResponse = modelMapper.map(noteBookModel, NoteBookResponse.class);
         return new ResponseEntity<>(noteBookResponse, HttpStatus.CREATED);
     }
 
@@ -71,8 +71,8 @@ public class NoteBookController {
     public ResponseEntity<List<NoteResponse>> getNoteBookNotes(
             @Parameter(description = "Notebook id", required = true)
             @RequestParam(value = "id") Long id,
-            @CurrentUser UserPrincipal userPrincipal){
-        List<NotesModel> notes = noteBookService.getNotes(id,userPrincipal);
+            @CurrentUser UserPrincipal userPrincipal) {
+        List<NotesModel> notes = noteBookService.getNotes(id, userPrincipal);
         List<NoteResponse> noteResponses = Arrays.asList(modelMapper.map(notes, NoteResponse[].class));
         return new ResponseEntity<>(noteResponses, HttpStatus.OK);
     }
@@ -85,11 +85,10 @@ public class NoteBookController {
     public ResponseEntity<ApiResponse> deleteNoteBook(
             @Parameter(description = "Notebook id", required = true)
             @Valid @RequestBody ByIdRequest byIdRequest,
-            @CurrentUser UserPrincipal userPrincipal){
+            @CurrentUser UserPrincipal userPrincipal) {
         ApiResponse apiResponse = noteBookService.deleteNoteBook(byIdRequest, userPrincipal);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
-
 
 
 }

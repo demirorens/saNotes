@@ -18,14 +18,14 @@ import javax.persistence.EntityManagerFactory;
 @Component
 public class NewUserEventListener implements PostInsertEventListener {
 
-    private final ApplicationEventPublisher applicationEventPublisher;
+    private final transient ApplicationEventPublisher applicationEventPublisher;
 
     public NewUserEventListener(ApplicationEventPublisher applicationEventPublisher) {
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Autowired
-    private EntityManagerFactory entityManagerFactory;
+    private transient EntityManagerFactory entityManagerFactory;
 
     @PostConstruct
     private void init() {

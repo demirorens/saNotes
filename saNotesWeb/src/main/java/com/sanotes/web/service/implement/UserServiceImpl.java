@@ -1,14 +1,14 @@
 package com.sanotes.web.service.implement;
 
-import com.sanotes.postgres.repository.NoteBookRepository;
-import com.sanotes.postgres.repository.RoleRepository;
-import com.sanotes.postgres.repository.TagRepository;
-import com.sanotes.postgres.repository.UserRepository;
 import com.sanotes.commons.model.NoteBookModel;
 import com.sanotes.commons.model.NotesModel;
 import com.sanotes.commons.model.user.Role;
 import com.sanotes.commons.model.user.RoleName;
 import com.sanotes.commons.model.user.User;
+import com.sanotes.postgres.repository.NoteBookRepository;
+import com.sanotes.postgres.repository.RoleRepository;
+import com.sanotes.postgres.repository.TagRepository;
+import com.sanotes.postgres.repository.UserRepository;
 import com.sanotes.web.exception.BadRequestException;
 import com.sanotes.web.exception.ResourceNotFoundException;
 import com.sanotes.web.exception.SANotesException;
@@ -42,6 +42,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ModelMapper modelMapper;
 
+    private static final String USER_DONT_HAVE_PERMISSION = "You dont have permission to update user info of : ";
+
     @Override
     public BooleanResponse checkUsernameAvailability(String username) {
         Boolean isUserNameAvailable = !userRepository.existsByUsername(username);
@@ -56,19 +58,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addUser(User user) {
-        if(userRepository.existsByEmail(user.getEmail())){
-            ApiResponse apiResponse = new ApiResponse( Boolean.FALSE,"email is already in use");
+        if (userRepository.existsByEmail(user.getEmail())) {
+            ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "email is already in use");
             throw new BadRequestException(apiResponse);
         }
-        if(userRepository.existsByUsername(user.getUsername())){
-            ApiResponse apiResponse = new ApiResponse( Boolean.FALSE,"username is already in use");
+        if (userRepository.existsByUsername(user.getUsername())) {
+            ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "username is already in use");
             throw new BadRequestException(apiResponse);
         }
 
         List<Role> roles = new ArrayList<>();
         roles.add(
                 roleRepository.findByName(RoleName.ROLE_USER)
-                        .orElseThrow(()->new SANotesException("User roles could not set."))
+                        .orElseThrow(() -> new SANotesException("User roles could not set."))
         );
         user.setRoles(roles);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -78,80 +80,80 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(User newUser, String username, UserPrincipal currentUser) {
         User user = userRepository.findByUsername(username).orElseThrow(
-                ()->new ResourceNotFoundException("User","username",username));
-        if(user.getId().equals(currentUser.getId()) ||
-                currentUser.getAuthorities().contains(new SimpleGrantedAuthority(RoleName.ROLE_ADMIN.toString()))){
+                () -> new ResourceNotFoundException("User", "username", username));
+        if (user.getId().equals(currentUser.getId()) ||
+                currentUser.getAuthorities().contains(new SimpleGrantedAuthority(RoleName.ROLE_ADMIN.toString()))) {
             user.setFirstname(newUser.getFirstname());
             user.setLastname(newUser.getLastname());
             user.setPassword(passwordEncoder.encode(newUser.getPassword()));
             return userRepository.save(user);
         }
         ApiResponse apiResponse = new ApiResponse(Boolean.FALSE,
-                "You dont have permission to update user info of : "+ username);
+                USER_DONT_HAVE_PERMISSION + username);
         throw new UnauthorizedException(apiResponse);
     }
 
     @Override
     public ApiResponse deleteUser(String username, UserPrincipal currentUser) {
         User user = userRepository.findByUsername(username).orElseThrow(
-                ()->new ResourceNotFoundException("User","username",username));
-        if(!currentUser.getAuthorities().contains(new SimpleGrantedAuthority(RoleName.ROLE_ADMIN.toString()))){
+                () -> new ResourceNotFoundException("User", "username", username));
+        if (!currentUser.getAuthorities().contains(new SimpleGrantedAuthority(RoleName.ROLE_ADMIN.toString()))) {
             ApiResponse apiResponse = new ApiResponse(Boolean.FALSE,
-                    "You dont have permission to delete user info of : "+ username);
+                    USER_DONT_HAVE_PERMISSION + username);
             throw new UnauthorizedException(apiResponse);
         }
 
         userRepository.delete(user);
-        return new ApiResponse(Boolean.TRUE,"You successfully delete user info of : "+ username);
+        return new ApiResponse(Boolean.TRUE, "You successfully delete user info of : " + username);
     }
 
     @Override
     public ApiResponse giveAdmin(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(
-                ()->new ResourceNotFoundException("User","username",username));
+                () -> new ResourceNotFoundException("User", "username", username));
         List<Role> roles = new ArrayList<>();
         roles.add(roleRepository.findByName(RoleName.ROLE_ADMIN)
-                .orElseThrow(()->new SANotesException("User role cant set")));
+                .orElseThrow(() -> new SANotesException("User role cant set")));
         roles.add(roleRepository.findByName(RoleName.ROLE_USER)
-                .orElseThrow(()->new SANotesException("User role cant set")));
+                .orElseThrow(() -> new SANotesException("User role cant set")));
         user.setRoles(roles);
         userRepository.save(user);
-        return new ApiResponse(Boolean.TRUE,"You successfully give ADMIN role to user : "+ username);
+        return new ApiResponse(Boolean.TRUE, "You successfully give ADMIN role to user : " + username);
     }
 
     @Override
     public ApiResponse removeAdmin(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(
-                ()->new ResourceNotFoundException("User","username",username));
+                () -> new ResourceNotFoundException("User", "username", username));
         List<Role> roles = new ArrayList<>();
         roles.add(roleRepository.findByName(RoleName.ROLE_USER)
-                .orElseThrow(()->new SANotesException("User role cant set")));
+                .orElseThrow(() -> new SANotesException("User role cant set")));
         user.setRoles(roles);
         userRepository.save(user);
-        return new ApiResponse(Boolean.TRUE,"You successfully remove ADMIN role from user : "+ username);
+        return new ApiResponse(Boolean.TRUE, "You successfully remove ADMIN role from user : " + username);
     }
 
     @Override
     public UserResponse getUser(String username, UserPrincipal currentUser) {
         User user = userRepository.findByUsername(username).orElseThrow(
-                ()->new ResourceNotFoundException("User","username",username));
-        if(user.getId().equals(currentUser.getId())){
+                () -> new ResourceNotFoundException("User", "username", username));
+        if (user.getId().equals(currentUser.getId())) {
             List<NoteBookModel> noteBooks = user.getNoteBooks();
-            for(int i = 0; i<noteBooks.size(); i++){
+            for (int i = 0; i < noteBooks.size(); i++) {
                 NoteBookModel noteBook = noteBooks.get(i);
-                List<NotesModel> notes=  noteBook.getNotes();
+                List<NotesModel> notes = noteBook.getNotes();
                 noteBook.setNotes(notes);
-                noteBooks.set(i,noteBook);
+                noteBooks.set(i, noteBook);
             }
             List<NoteBookResponse> noteBookResponses =
                     Arrays.asList(modelMapper.map(noteBooks, NoteBookResponse[].class));
             List<TagResponse> tagResponses =
                     Arrays.asList(modelMapper.map(user.getTags(), TagResponse[].class));
-            return new UserResponse(user.getId(),user.getFirstname(),user.getLastname(),
-                    user.getUsername(),user.getEmail(),noteBookResponses,tagResponses);
+            return new UserResponse(user.getId(), user.getFirstname(), user.getLastname(),
+                    user.getUsername(), user.getEmail(), noteBookResponses, tagResponses);
         }
         ApiResponse apiResponse = new ApiResponse(Boolean.FALSE,
-                "You dont have permission get user info of : "+ username);
+                USER_DONT_HAVE_PERMISSION + username);
         throw new UnauthorizedException(apiResponse);
 
     }

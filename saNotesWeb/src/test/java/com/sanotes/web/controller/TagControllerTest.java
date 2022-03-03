@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-public class TagControllerTest {
+class TagControllerTest {
 
     @Mock
     TagService tagService;
@@ -74,7 +74,7 @@ public class TagControllerTest {
         when(tagService.saveTag(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(tag);
         when(modelMapperM.map(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(modelMapper.map(tag, TagResponse.class));
         MediaType MEDIA_TYPE_JSON_UTF8 = new MediaType("application", "json", java.nio.charset.Charset.forName("UTF-8"));
-        MockHttpServletRequestBuilder request = post("/api/tags");
+        MockHttpServletRequestBuilder request = post("/api/v1/tags");
         request.content(mapper.writeValueAsString(new TagModel("sample", "sample tag")));
         request.accept(MEDIA_TYPE_JSON_UTF8);
         request.contentType(MEDIA_TYPE_JSON_UTF8);
@@ -93,7 +93,7 @@ public class TagControllerTest {
         when(tagService.updateTag(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(tag);
         when(modelMapperM.map(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(modelMapper.map(tag, TagResponse.class));
         MediaType MEDIA_TYPE_JSON_UTF8 = new MediaType("application", "json", java.nio.charset.Charset.forName("UTF-8"));
-        MockHttpServletRequestBuilder request = put("/api/tags");
+        MockHttpServletRequestBuilder request = put("/api/v1/tags");
         request.content(mapper.writeValueAsString(new TagModel("sample", "sample tag")));
         request.accept(MEDIA_TYPE_JSON_UTF8);
         request.contentType(MEDIA_TYPE_JSON_UTF8);
@@ -112,7 +112,7 @@ public class TagControllerTest {
         when(tagService.getNotes(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(notes);
         when(modelMapperM.map(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(modelMapper.map(notes, NoteResponse[].class));
         MediaType MEDIA_TYPE_JSON_UTF8 = new MediaType("application", "json", java.nio.charset.Charset.forName("UTF-8"));
-        MockHttpServletRequestBuilder request = get("/api/tags/notes");
+        MockHttpServletRequestBuilder request = get("/api/v1/tags/notes");
         request.param("id", "1");
         request.accept(MEDIA_TYPE_JSON_UTF8);
         request.contentType(MEDIA_TYPE_JSON_UTF8);
@@ -130,7 +130,7 @@ public class TagControllerTest {
     void deleteTag() throws Exception {
         when(tagService.deleteTag(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(new ApiResponse(true, "success"));
         MediaType MEDIA_TYPE_JSON_UTF8 = new MediaType("application", "json", java.nio.charset.Charset.forName("UTF-8"));
-        MockHttpServletRequestBuilder request = delete("/api/tags");
+        MockHttpServletRequestBuilder request = delete("/api/v1/tags");
         request.content(mapper.writeValueAsString(new ByIdRequest(1l)));
         request.accept(MEDIA_TYPE_JSON_UTF8);
         request.contentType(MEDIA_TYPE_JSON_UTF8);

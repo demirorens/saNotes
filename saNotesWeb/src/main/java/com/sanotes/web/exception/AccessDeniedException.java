@@ -10,33 +10,21 @@ public class AccessDeniedException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     private final ApiResponse apiResponse;
-    private String message;
+    private final String message;
 
     public AccessDeniedException(ApiResponse apiResponse) {
         super();
+        this.message = apiResponse.getMessage();
         this.apiResponse = apiResponse;
     }
 
-    public AccessDeniedException(String message) {
-        super(message);
-        this.message = message;
-        apiResponse = new ApiResponse(Boolean.FALSE, message);
-    }
-
-    public AccessDeniedException(String message, Throwable cause) {
-        super(message, cause);
-        apiResponse = new ApiResponse(Boolean.FALSE, message);
-    }
 
     public ApiResponse getApiResponse() {
         return apiResponse;
     }
 
+    @Override
     public String getMessage() {
         return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 }

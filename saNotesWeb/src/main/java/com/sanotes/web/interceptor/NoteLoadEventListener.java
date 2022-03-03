@@ -35,20 +35,24 @@ public class NoteLoadEventListener implements PostLoadEventListener {
     @Override
     public void onPostLoad(PostLoadEvent postLoadEvent) {
         final Object entity = postLoadEvent.getEntity();
-        if (entity instanceof NotesModel && ((NotesModel) entity).getNoteId() != null) {
-            if (((NotesModel) entity).getTopic() == null && ((NotesModel) entity).getText() == null) {
-                NotModel notModel = noteRepository.findById(((NotesModel) entity).getNoteId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Note", "by id", ((NotesModel) entity).getNoteId()));
-                ((NotesModel) entity).setTopic(notModel.getTopic());
-                ((NotesModel) entity).setText(notModel.getText());
-            }
-        } else if (entity instanceof NotesVersionModel && ((NotesVersionModel) entity).getNoteId() != null) {
-            if (((NotesVersionModel) entity).getTopic() == null && ((NotesVersionModel) entity).getText() == null) {
-                NotModel notModel = noteRepository.findById(((NotesVersionModel) entity).getNoteId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Note", "by id", ((NotesVersionModel) entity).getNoteId()));
-                ((NotesVersionModel) entity).setTopic(notModel.getTopic());
-                ((NotesVersionModel) entity).setText(notModel.getText());
-            }
+        if (entity instanceof NotesModel
+                && ((NotesModel) entity).getNoteId() != null
+                && ((NotesModel) entity).getTopic() == null
+                && ((NotesModel) entity).getText() == null) {
+            NotModel notModel = noteRepository.findById(((NotesModel) entity).getNoteId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Note", "by id", ((NotesModel) entity).getNoteId()));
+            ((NotesModel) entity).setTopic(notModel.getTopic());
+            ((NotesModel) entity).setText(notModel.getText());
+
+        } else if (entity instanceof NotesVersionModel
+                && ((NotesVersionModel) entity).getNoteId() != null
+                && ((NotesVersionModel) entity).getTopic() == null
+                && ((NotesVersionModel) entity).getText() == null) {
+            NotModel notModel = noteRepository.findById(((NotesVersionModel) entity).getNoteId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Note", "by id", ((NotesVersionModel) entity).getNoteId()));
+            ((NotesVersionModel) entity).setTopic(notModel.getTopic());
+            ((NotesVersionModel) entity).setText(notModel.getText());
+
         }
     }
 

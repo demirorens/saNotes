@@ -5,16 +5,18 @@ import com.sanotes.web.payload.ApiResponse;
 public class UnauthorizedException extends RuntimeException {
     private static final long serialVersionUID = 1L;
     private final ApiResponse apiResponse;
-    private String message;
+    private final String message;
 
     public UnauthorizedException(ApiResponse apiResponse) {
         super();
+        this.message = apiResponse.getMessage();
         this.apiResponse = apiResponse;
     }
 
 
     public UnauthorizedException(String message) {
-        super(message);
+        super();
+        this.message = message;
         apiResponse = new ApiResponse(Boolean.FALSE, message);
     }
 
@@ -25,9 +27,5 @@ public class UnauthorizedException extends RuntimeException {
     @Override
     public String getMessage() {
         return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 }
