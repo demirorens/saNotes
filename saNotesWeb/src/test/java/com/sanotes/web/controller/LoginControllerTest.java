@@ -1,73 +1,108 @@
 package com.sanotes.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sanotes.commons.model.user.Role;
+import com.sanotes.commons.model.user.RoleName;
 import com.sanotes.commons.model.user.User;
-import com.sanotes.web.exception.SAExceptionHandler;
+import com.sanotes.postgres.repository.RoleRepository;
+import com.sanotes.web.payload.LoginRequest;
 import com.sanotes.web.payload.SignUpRequest;
-import com.sanotes.web.service.UserService;
-import org.junit.jupiter.api.BeforeEach;
+import org.json.JSONObject;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
+import org.junit.jupiter.api.TestInstance;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import java.time.Instant;
+
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
+
 @SpringBootTest
+@AutoConfigureMockMvc
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class LoginControllerTest {
 
-    @Mock
-    UserService userService;
+    @Autowired
+    private WebApplicationContext context;
 
-    @InjectMocks
-    LoginController controller;
+    @Autowired
+    RoleRepository roleRepository;
 
     User user;
     ObjectMapper mapper;
     MockMvc mockMvc;
+    private static final String username = "testuser" + Instant.now().getEpochSecond();
 
-    @BeforeEach
+    private String accessToken;
+
+    @BeforeAll
     void setUp() {
-        user = new User("firstName", "lastName", "username", "password", "email@gmail.com");
-        user.setId(1l);
+        if(roleRepository.findByName(RoleName.ROLE_USER).isEmpty()){
+            roleRepository.save(new Role(RoleName.ROLE_USER));
+        }
         mapper = new ObjectMapper();
         mockMvc = MockMvcBuilders
-                .standaloneSetup(controller)
-                .setControllerAdvice(new SAExceptionHandler())
+                .webAppContextSetup(context)
+                .apply(springSecurity())
                 .build();
     }
 
 
     @Test
     void signUp() throws Exception {
-        //when(userService.addUser(ArgumentMatchers.any())).thenReturn(user);
         MediaType MEDIA_TYPE_JSON_UTF8 = new MediaType("application", "json", java.nio.charset.Charset.forName("UTF-8"));
         MockHttpServletRequestBuilder request = post("/api/v1/auth/signup");
-        request.content(mapper.writeValueAsString(new SignUpRequest("firstName", "lastName", "username", "password", "email@gmail.com")));
+        request.content(mapper.writeValueAsString(new SignUpRequest("firstName", "lastName", username, "password", username + "@gmail.com")));
         request.accept(MEDIA_TYPE_JSON_UTF8);
         request.contentType(MEDIA_TYPE_JSON_UTF8);
         MockHttpServletResponse response = mockMvc.perform(request)
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.success").value(true))
                 .andReturn().getResponse();
+    }
 
-        //verify(userService).addUser(ArgumentMatchers.any());
+    @Test
+    void login() throws Exception {
+        MediaType MEDIA_TYPE_JSON_UTF8 = new MediaType("application", "json", java.nio.charset.Charset.forName("UTF-8"));
+        MockHttpServletRequestBuilder request = post("/api/v1/auth/login");
+        request.content(mapper.writeValueAsString(new LoginRequest(username, "password")));
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        MockHttpServletResponse response = mockMvc.perform(request)
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.accessToken").exists())
+                .andReturn().getResponse();
+        JSONObject jsonObject = new JSONObject(response.getContentAsString());
+        accessToken = jsonObject.get("accessToken") + "";
+    }
+
+
+    @AfterAll
+    void cleanup() throws Exception {
+        MediaType MEDIA_TYPE_JSON_UTF8 = new MediaType("application", "json", java.nio.charset.Charset.forName("UTF-8"));
+        MockHttpServletRequestBuilder request =
+                delete("/api/v1/user/{username}", username)
+                        .header("Authorization", "Bearer " + accessToken);
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        MockHttpServletResponse response = mockMvc.perform(request)
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.success").value(true))
+                .andReturn().getResponse();
     }
 
 }

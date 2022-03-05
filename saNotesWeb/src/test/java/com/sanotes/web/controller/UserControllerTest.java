@@ -66,13 +66,13 @@ class UserControllerTest {
         when(userService.checkUsernameAvailability(ArgumentMatchers.any())).thenReturn(booleanResponse);
         MediaType MEDIA_TYPE_JSON_UTF8 =
                 new MediaType("application", "json", java.nio.charset.Charset.forName("UTF-8"));
-        MockHttpServletRequestBuilder request = get("/api/v1/users/isUsernameAvailable");
+        MockHttpServletRequestBuilder request = get("/api/v1/user/isUsernameAvailable");
         request.param("username", "username");
         request.accept(MEDIA_TYPE_JSON_UTF8);
         request.contentType(MEDIA_TYPE_JSON_UTF8);
         MockHttpServletResponse response = mockMvc.perform(request)
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$.result").value(true))
+                .andExpect(jsonPath("$.result").exists())
                 .andReturn().getResponse();
 
         verify(userService).checkUsernameAvailability(ArgumentMatchers.any());
@@ -83,13 +83,13 @@ class UserControllerTest {
         when(userService.checkEmailAvailability(ArgumentMatchers.any())).thenReturn(booleanResponse);
         MediaType MEDIA_TYPE_JSON_UTF8 =
                 new MediaType("application", "json", java.nio.charset.Charset.forName("UTF-8"));
-        MockHttpServletRequestBuilder request = get("/api/v1/users/isEmailAvailable");
+        MockHttpServletRequestBuilder request = get("/api/v1/user/isEmailAvailable");
         request.param("email", "email@email.com");
         request.accept(MEDIA_TYPE_JSON_UTF8);
         request.contentType(MEDIA_TYPE_JSON_UTF8);
         MockHttpServletResponse response = mockMvc.perform(request)
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$.result").value(true))
+                .andExpect(jsonPath("$.result").exists())
                 .andReturn().getResponse();
 
         verify(userService).checkEmailAvailability(ArgumentMatchers.any());
@@ -102,7 +102,7 @@ class UserControllerTest {
                 .thenReturn(modelMapper.map(user, UserResponse.class));
         MediaType MEDIA_TYPE_JSON_UTF8 =
                 new MediaType("application", "json", java.nio.charset.Charset.forName("UTF-8"));
-        MockHttpServletRequestBuilder request = post("/api/v1/users");
+        MockHttpServletRequestBuilder request = post("/api/v1/user");
         request.content(mapper.writeValueAsString(
                 new UserRequest("firstName", "lastName",
                         "username", "password",
@@ -127,7 +127,7 @@ class UserControllerTest {
                 .thenReturn(modelMapper.map(user, UserResponse.class));
         MediaType MEDIA_TYPE_JSON_UTF8 =
                 new MediaType("application", "json", java.nio.charset.Charset.forName("UTF-8"));
-        MockHttpServletRequestBuilder request = put("/api/v1/users/{username}", "username");
+        MockHttpServletRequestBuilder request = put("/api/v1/user/{username}", "username");
         request.content(mapper.writeValueAsString(
                 new UserRequest("firstName", "lastName",
                         "username", "password",
@@ -147,7 +147,7 @@ class UserControllerTest {
                 .thenReturn(new ApiResponse(true, "success"));
         MediaType MEDIA_TYPE_JSON_UTF8 =
                 new MediaType("application", "json", java.nio.charset.Charset.forName("UTF-8"));
-        MockHttpServletRequestBuilder request = delete("/api/v1/users/{username}", "username");
+        MockHttpServletRequestBuilder request = delete("/api/v1/user/{username}", "username");
         request.accept(MEDIA_TYPE_JSON_UTF8);
         request.contentType(MEDIA_TYPE_JSON_UTF8);
         MockHttpServletResponse response = mockMvc.perform(request)

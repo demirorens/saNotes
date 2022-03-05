@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("$/api/v1/user")
+@RequestMapping("/api/v1/user")
 @Tag(name = "user", description = "the User API")
 public class UserController {
 
@@ -87,7 +87,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{username}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @Operation(summary = "Delete user",
             security = @SecurityRequirement(name = "bearerAuth"),
             tags = {"user"})

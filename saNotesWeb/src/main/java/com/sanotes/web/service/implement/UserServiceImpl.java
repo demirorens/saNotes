@@ -98,13 +98,16 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new ResourceNotFoundException("User", "username", username));
         if (!currentUser.getAuthorities().contains(new SimpleGrantedAuthority(RoleName.ROLE_ADMIN.toString()))) {
-            ApiResponse apiResponse = new ApiResponse(Boolean.FALSE,
-                    USER_DONT_HAVE_PERMISSION + username);
-            throw new UnauthorizedException(apiResponse);
-        }
 
-        userRepository.delete(user);
-        return new ApiResponse(Boolean.TRUE, "You successfully delete user info of : " + username);
+        }
+        if (user.getId().equals(currentUser.getId()) ||
+                currentUser.getAuthorities().contains(new SimpleGrantedAuthority(RoleName.ROLE_ADMIN.toString()))) {
+            userRepository.delete(user);
+            return new ApiResponse(Boolean.TRUE, "You successfully delete user info of : " + username);
+        }
+        ApiResponse apiResponse = new ApiResponse(Boolean.FALSE,
+                USER_DONT_HAVE_PERMISSION + username);
+        throw new UnauthorizedException(apiResponse);
     }
 
     @Override
