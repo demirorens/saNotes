@@ -58,8 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-ui.html",
                         "/sanotes-openapi/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/v1/users/isUsernameAvailable",
-                        "/api/v1/users/isEmailAvailable").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v1/user/isUsernameAvailable",
+                        "/api/v1/user/isEmailAvailable").permitAll()
                 .anyRequest().authenticated();
         httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }

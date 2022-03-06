@@ -1,6 +1,7 @@
 package com.sanotes.web.payload;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 public class NoteRequest {
 
@@ -11,12 +12,23 @@ public class NoteRequest {
     @NotBlank
     private String text;
 
+    private NoteBookRequest notebook;
+    private List<TagRequest> tags;
+
     public NoteRequest() {
     }
 
-    public NoteRequest(String topic, String text) {
+    public NoteRequest(Long noteBookId, String topic, String text) {
         this.topic = topic;
         this.text = text;
+        this.notebook = new NoteBookRequest(noteBookId);
+    }
+
+    public NoteRequest(String topic, String text, NoteBookRequest notebook, List<TagRequest> tags) {
+        this.topic = topic;
+        this.text = text;
+        this.notebook = notebook;
+        this.tags = tags;
     }
 
     public Long getId() {
@@ -51,5 +63,19 @@ public class NoteRequest {
         this.text = text;
     }
 
+    public NoteBookRequest getNotebook() {
+        return notebook;
+    }
 
+    public void setNotebook(NoteBookRequest notebook) {
+        this.notebook = notebook;
+    }
+
+    public List<TagRequest> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagRequest> tags) {
+        this.tags = tags;
+    }
 }

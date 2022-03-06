@@ -50,6 +50,10 @@ public class NoteBookModel extends UserAudit {
         this.description = description;
     }
 
+    public NoteBookModel(Long noteBookId) {
+        this.id=noteBookId;
+    }
+
     @Override
     public String toString() {
         return "NoteBookModel{" +

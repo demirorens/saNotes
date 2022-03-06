@@ -30,10 +30,10 @@ public class TagModel extends UserAudit {
     private String description;
 
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.DETACH)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinTable(name = "note_tags",
-            joinColumns = @JoinColumn(name = "tag_id",referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "note_id",referencedColumnName = "id"))
+            joinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "note_id", referencedColumnName = "id"))
     private List<NotesModel> notes;
 
 

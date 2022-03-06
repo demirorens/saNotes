@@ -17,6 +17,12 @@ public class TagRequest {
         this.description = description;
     }
 
+    public TagRequest(Long id, String name, String description) {
+        this.name = name;
+        this.description = description;
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

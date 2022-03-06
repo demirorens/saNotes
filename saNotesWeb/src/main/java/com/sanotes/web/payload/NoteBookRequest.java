@@ -20,6 +20,10 @@ public class NoteBookRequest {
         this.description = description;
     }
 
+    public NoteBookRequest(Long noteBookId) {
+        this.id = noteBookId;
+    }
+
 
     public String getName() {
         return name;

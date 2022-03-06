@@ -60,6 +60,12 @@ public class NotesModel extends UserAudit {
         this.text = text;
     }
 
+    public NotesModel(Long id, String topic, String text) {
+        this.topic = topic;
+        this.text = text;
+        this.id = id;
+    }
+
     @JsonBackReference
     public NoteBookModel getNotebook() {
         return notebook;

@@ -56,7 +56,7 @@ public class NotesServiceImpl implements NotesService {
             }
         }
         for (int i = 0; i < (note.getTags() != null ? note.getTags().size() : 0); i++) {
-            Optional<TagModel> tagModel = tagRepository.findByName(note.getTags().get(i).getName());
+            Optional<TagModel> tagModel = tagRepository.findById(note.getTags().get(i).getId());
             if (tagModel.isEmpty()) {
                 note.getTags().set(i, tagRepository.save(note.getTags().get(i)));
             } else {
@@ -85,7 +85,7 @@ public class NotesServiceImpl implements NotesService {
             }
         }
         for (int i = 0; i < (note.getTags() != null ? note.getTags().size() : 0); i++) {
-            Optional<TagModel> tagModel = tagRepository.findByName(note.getTags().get(i).getName());
+            Optional<TagModel> tagModel = tagRepository.findById(note.getTags().get(i).getId());
             User user = new User();
             user.setId(userPrincipal.getId());
             if (tagModel.isEmpty()) {

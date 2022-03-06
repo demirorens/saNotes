@@ -43,7 +43,7 @@ public class NotesController {
             @Parameter(description = "Note parameters", required = true)
             @Valid @RequestBody NoteRequest note,
             @CurrentUser UserPrincipal userPrincipal) {
-        NotesModel notesModel = new NotesModel(note.getTopic(), note.getText());
+        NotesModel notesModel = modelMapper.map(note, NotesModel.class);
         notesModel = notesService.saveNote(notesModel, userPrincipal);
         NoteResponse noteResponse = modelMapper.map(notesModel, NoteResponse.class);
         return new ResponseEntity<>(noteResponse, HttpStatus.CREATED);
@@ -58,9 +58,7 @@ public class NotesController {
             @Parameter(description = "Note parameters", required = true)
             @Valid @RequestBody NoteRequest note,
             @CurrentUser UserPrincipal userPrincipal) {
-        NotesModel notesModel = new NotesModel(note.getTopic(), note.getText());
-        notesModel.setId(note.getId());
-        notesModel.setNoteId(note.getNoteId());
+        NotesModel notesModel = modelMapper.map(note, NotesModel.class);
         notesModel = notesService.updateNote(notesModel, userPrincipal);
         NoteResponse noteResponse = modelMapper.map(notesModel, NoteResponse.class);
         return new ResponseEntity<>(noteResponse, HttpStatus.CREATED);
