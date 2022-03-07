@@ -20,10 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -64,7 +62,7 @@ public class LoginController {
         String password = signUpRequest.getPassword();
         User user = new User(firstName, lastName, username, password, email);
 
-        User result = userService.addUser(user);
+        userService.addUser(user);
         return ResponseEntity.ok(new ApiResponse(Boolean.TRUE, "User signed up successfully."));
     }
 

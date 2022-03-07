@@ -43,6 +43,7 @@ public class UserServiceImpl implements UserService {
     private ModelMapper modelMapper;
 
     private static final String USER_DONT_HAVE_PERMISSION = "You dont have permission to update user info of : ";
+    private static final String USER_ROLE_CANT_SET = "User roles could not set.";
 
     @Override
     public BooleanResponse checkUsernameAvailability(String username) {
@@ -70,7 +71,7 @@ public class UserServiceImpl implements UserService {
         List<Role> roles = new ArrayList<>();
         roles.add(
                 roleRepository.findByName(RoleName.ROLE_USER)
-                        .orElseThrow(() -> new SANotesException("User roles could not set."))
+                        .orElseThrow(() -> new SANotesException(USER_ROLE_CANT_SET))
         );
         user.setRoles(roles);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -97,9 +98,6 @@ public class UserServiceImpl implements UserService {
     public ApiResponse deleteUser(String username, UserPrincipal currentUser) {
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new ResourceNotFoundException("User", "username", username));
-        if (!currentUser.getAuthorities().contains(new SimpleGrantedAuthority(RoleName.ROLE_ADMIN.toString()))) {
-
-        }
         if (user.getId().equals(currentUser.getId()) ||
                 currentUser.getAuthorities().contains(new SimpleGrantedAuthority(RoleName.ROLE_ADMIN.toString()))) {
             userRepository.delete(user);
@@ -116,9 +114,9 @@ public class UserServiceImpl implements UserService {
                 () -> new ResourceNotFoundException("User", "username", username));
         List<Role> roles = new ArrayList<>();
         roles.add(roleRepository.findByName(RoleName.ROLE_ADMIN)
-                .orElseThrow(() -> new SANotesException("User role cant set")));
+                .orElseThrow(() -> new SANotesException(USER_ROLE_CANT_SET)));
         roles.add(roleRepository.findByName(RoleName.ROLE_USER)
-                .orElseThrow(() -> new SANotesException("User role cant set")));
+                .orElseThrow(() -> new SANotesException(USER_ROLE_CANT_SET)));
         user.setRoles(roles);
         userRepository.save(user);
         return new ApiResponse(Boolean.TRUE, "You successfully give ADMIN role to user : " + username);
@@ -130,7 +128,7 @@ public class UserServiceImpl implements UserService {
                 () -> new ResourceNotFoundException("User", "username", username));
         List<Role> roles = new ArrayList<>();
         roles.add(roleRepository.findByName(RoleName.ROLE_USER)
-                .orElseThrow(() -> new SANotesException("User role cant set")));
+                .orElseThrow(() -> new SANotesException(USER_ROLE_CANT_SET)));
         user.setRoles(roles);
         userRepository.save(user);
         return new ApiResponse(Boolean.TRUE, "You successfully remove ADMIN role from user : " + username);
