@@ -1,2 +1,2 @@
 # sanotes
-Notes app
+Sample Springboot Notes application.
