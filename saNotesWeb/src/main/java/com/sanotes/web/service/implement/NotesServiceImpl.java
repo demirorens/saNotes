@@ -154,7 +154,7 @@ public class NotesServiceImpl implements NotesService {
             throw new ResourceNotFoundException("Note", "by id", byIdRequest.getId().toString());
         } else {
             if (!noteBook.get().getUser().getId().equals(userPrincipal.getId())) {
-                throw new UnauthorizedException("User don't have permission for this request");
+                throw new UnauthorizedException(USER_DONT_HAVE_PERMISSION);
             }
         }
         notesRepository.delete(note);

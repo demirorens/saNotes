@@ -44,6 +44,8 @@ public class UserServiceImpl implements UserService {
 
     private static final String USER_DONT_HAVE_PERMISSION = "You dont have permission to update user info of : ";
     private static final String USER_ROLE_CANT_SET = "User roles could not set.";
+    private static final String RESOURCE_NAME = "User";
+    private static final String FIELD_NAME = "username";
 
     @Override
     public BooleanResponse checkUsernameAvailability(String username) {
@@ -81,7 +83,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(User newUser, String username, UserPrincipal currentUser) {
         User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new ResourceNotFoundException("User", "username", username));
+                () -> new ResourceNotFoundException(RESOURCE_NAME, FIELD_NAME, username));
         if (user.getId().equals(currentUser.getId()) ||
                 currentUser.getAuthorities().contains(new SimpleGrantedAuthority(RoleName.ROLE_ADMIN.toString()))) {
             user.setFirstname(newUser.getFirstname());
@@ -97,7 +99,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ApiResponse deleteUser(String username, UserPrincipal currentUser) {
         User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new ResourceNotFoundException("User", "username", username));
+                () -> new ResourceNotFoundException(RESOURCE_NAME, FIELD_NAME, username));
         if (user.getId().equals(currentUser.getId()) ||
                 currentUser.getAuthorities().contains(new SimpleGrantedAuthority(RoleName.ROLE_ADMIN.toString()))) {
             userRepository.delete(user);
@@ -111,7 +113,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ApiResponse giveAdmin(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new ResourceNotFoundException("User", "username", username));
+                () -> new ResourceNotFoundException(RESOURCE_NAME, FIELD_NAME, username));
         List<Role> roles = new ArrayList<>();
         roles.add(roleRepository.findByName(RoleName.ROLE_ADMIN)
                 .orElseThrow(() -> new SANotesException(USER_ROLE_CANT_SET)));
@@ -125,7 +127,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ApiResponse removeAdmin(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new ResourceNotFoundException("User", "username", username));
+                () -> new ResourceNotFoundException(RESOURCE_NAME, FIELD_NAME, username));
         List<Role> roles = new ArrayList<>();
         roles.add(roleRepository.findByName(RoleName.ROLE_USER)
                 .orElseThrow(() -> new SANotesException(USER_ROLE_CANT_SET)));
@@ -137,7 +139,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getUser(String username, UserPrincipal currentUser) {
         User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new ResourceNotFoundException("User", "username", username));
+                () -> new ResourceNotFoundException(RESOURCE_NAME, FIELD_NAME, username));
         if (user.getId().equals(currentUser.getId())) {
             List<NoteBookModel> noteBooks = user.getNoteBooks();
             for (int i = 0; i < noteBooks.size(); i++) {
