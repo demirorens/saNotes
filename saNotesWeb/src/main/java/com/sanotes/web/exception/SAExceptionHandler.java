@@ -21,18 +21,6 @@ import java.util.Objects;
 @ControllerAdvice
 public class SAExceptionHandler {
 
-    public ResponseEntity<ApiResponse> resolveException(ApiException exception) {
-        String message = exception.getMessage();
-        HttpStatus status = exception.getHttpStatus();
-
-        ApiResponse apiResponse = new ApiResponse();
-
-        apiResponse.setSuccess(Boolean.FALSE);
-        apiResponse.setMessage(message);
-
-        return new ResponseEntity<>(apiResponse, status);
-    }
-
     @ExceptionHandler(UnauthorizedException.class)
     @ResponseBody
     @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
