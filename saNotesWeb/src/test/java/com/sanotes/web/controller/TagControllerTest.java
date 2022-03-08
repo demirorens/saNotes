@@ -46,8 +46,8 @@ class TagControllerTest {
     private final MediaType MEDIA_TYPE_JSON_UTF8 =
             new MediaType("application", "json", StandardCharsets.UTF_8);
 
-    private static final String username = "testuser" + Instant.now().getEpochSecond();
-    private static final String otherUsername = "testuser2" + Instant.now().getEpochSecond();
+    private static final String username = "tag_testuser" + Instant.now().getEpochSecond();
+    private static final String otherUsername = "tag_testuser2" + Instant.now().getEpochSecond();
     private String accessToken;
     private String otherAccessToken;
 
@@ -279,6 +279,15 @@ class TagControllerTest {
         MockHttpServletRequestBuilder request =
                 delete("/api/v1/user/{username}", username)
                         .header("Authorization", "Bearer " + accessToken);
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mockMvc.perform(request)
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.success").value(true));
+
+        request =
+                delete("/api/v1/user/{username}", otherUsername)
+                        .header("Authorization", "Bearer " + otherAccessToken);
         request.accept(MEDIA_TYPE_JSON_UTF8);
         request.contentType(MEDIA_TYPE_JSON_UTF8);
         mockMvc.perform(request)

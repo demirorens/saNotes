@@ -45,7 +45,7 @@ class LoginControllerTest {
 
     private final MediaType MEDIA_TYPE_JSON_UTF8 =
             new MediaType("application", "json", StandardCharsets.UTF_8);
-    private static final String username = "testuser" + Instant.now().getEpochSecond();
+    private static final String username = "login_testuser" + Instant.now().getEpochSecond();
     private String accessToken;
 
     @BeforeAll
