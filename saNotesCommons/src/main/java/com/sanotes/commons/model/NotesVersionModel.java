@@ -4,10 +4,16 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sanotes.commons.model.audit.UserAudit;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 
+@Setter
+@Getter
+@NoArgsConstructor
 @Entity
 @Table(name = "notes_version",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"id", "note_id"})})
@@ -40,10 +46,6 @@ public class NotesVersionModel extends UserAudit {
     @JoinColumn(name = "notebook_id")
     private NoteBookModel notebook;
 
-
-    public NotesVersionModel() {
-    }
-
     public NotesVersionModel(NotesModel notesModel) {
         this.id = notesModel.getId();
         this.noteId = notesModel.getNoteId();
@@ -53,52 +55,9 @@ public class NotesVersionModel extends UserAudit {
 
     }
 
-    public Long getVersion_id() {
-        return version_id;
-    }
-
-    public void setVersion_id(Long version_id) {
-        this.version_id = version_id;
-    }
-
     @JsonBackReference
     public NoteBookModel getNotebook() {
         return notebook;
     }
 
-    public void setNotebook(NoteBookModel notebook) {
-        this.notebook = notebook;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNoteId() {
-        return noteId;
-    }
-
-    public void setNoteId(String noteId) {
-        this.noteId = noteId;
-    }
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
 }

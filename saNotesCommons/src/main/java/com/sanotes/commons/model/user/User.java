@@ -1,9 +1,14 @@
 package com.sanotes.commons.model.user;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.sanotes.commons.model.NoteBookModel;
 import com.sanotes.commons.model.TagModel;
 import com.sanotes.commons.model.audit.DateAudit;
-import com.sanotes.commons.model.NoteBookModel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -13,9 +18,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Setter
+@Getter
+@NoArgsConstructor
 @Entity
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"}),
-    @UniqueConstraint(columnNames = {"email"})})
+        @UniqueConstraint(columnNames = {"email"})})
 @JsonIdentityInfo(scope = User.class,
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
@@ -52,22 +60,17 @@ public class User extends DateAudit {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id",referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id",referencedColumnName = "id"))
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;
 
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<NoteBookModel> noteBooks;
 
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TagModel> tags;
-
-    public User() {
-    }
-
-
 
     public User(String firstname, String lastname, String username, String password, String email) {
         this.firstname = firstname;
@@ -75,14 +78,6 @@ public class User extends DateAudit {
         this.username = username;
         this.password = password;
         this.email = email;
-    }
-
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
     }
 
     @JsonManagedReference
@@ -97,6 +92,7 @@ public class User extends DateAudit {
             this.noteBooks = Collections.unmodifiableList(noteBooks);
         }
     }
+
     @JsonManagedReference
     public List<TagModel> getTags() {
         return tags == null ? null : new ArrayList<>(tags);
@@ -108,54 +104,6 @@ public class User extends DateAudit {
         } else {
             this.tags = Collections.unmodifiableList(tags);
         }
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
 }

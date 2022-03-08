@@ -1,7 +1,14 @@
 package com.sanotes.web.payload;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.validation.constraints.NotBlank;
 
+@Setter
+@Getter
+@NoArgsConstructor
 public class LoginRequest {
     @NotBlank
     private String emailOrUsername;
@@ -9,27 +16,9 @@ public class LoginRequest {
     @NotBlank
     private String password;
 
-    public LoginRequest(){}
-
-    public LoginRequest(String emailOrUsername,String password){
+    public LoginRequest(String emailOrUsername, String password) {
         this.emailOrUsername = emailOrUsername;
         this.password = password;
     }
 
-
-    public String getEmailOrUsername() {
-        return emailOrUsername;
-    }
-
-    public void setEmailOrUsername(String emailOrUsername) {
-        this.emailOrUsername = emailOrUsername;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

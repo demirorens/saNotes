@@ -6,10 +6,16 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sanotes.commons.model.audit.UserAudit;
 import com.sanotes.commons.model.user.User;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
 
+@Setter
+@Getter
+@NoArgsConstructor
 @Entity
 @Table(name = "tag")
 @JsonIdentityInfo(scope = TagModel.class,
@@ -41,21 +47,9 @@ public class TagModel extends UserAudit {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public TagModel() {
-    }
-
     public TagModel(String name, String description) {
         this.name = name;
         this.description = description;
-    }
-
-    @Override
-    public String toString() {
-        return "NoteBookModel{" +
-                "Id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
     }
 
     @JsonBackReference
@@ -63,40 +57,4 @@ public class TagModel extends UserAudit {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-
-    public List<NotesModel> getNotes() {
-        return notes;
-    }
-
-    public void setNotes(List<NotesModel> notes) {
-        this.notes = notes;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

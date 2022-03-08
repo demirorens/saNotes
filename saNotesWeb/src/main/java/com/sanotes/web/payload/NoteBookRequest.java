@@ -1,8 +1,14 @@
 package com.sanotes.web.payload;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.validation.constraints.NotBlank;
 
-
+@Setter
+@Getter
+@NoArgsConstructor
 public class NoteBookRequest {
 
 
@@ -12,9 +18,6 @@ public class NoteBookRequest {
     @NotBlank
     private String description;
 
-    public NoteBookRequest() {
-    }
-
     public NoteBookRequest(String name, String description) {
         this.name = name;
         this.description = description;
@@ -22,30 +25,5 @@ public class NoteBookRequest {
 
     public NoteBookRequest(Long noteBookId) {
         this.id = noteBookId;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 }

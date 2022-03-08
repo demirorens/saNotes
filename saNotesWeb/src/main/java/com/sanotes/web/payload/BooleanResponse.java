@@ -1,5 +1,12 @@
 package com.sanotes.web.payload;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Setter
+@Getter
+@NoArgsConstructor
 public class BooleanResponse {
     private Boolean result;
 
@@ -7,11 +14,4 @@ public class BooleanResponse {
         this.result = result;
     }
 
-    public Boolean getResult() {
-        return result;
-    }
-
-    public void setResult(Boolean result) {
-        this.result = result;
-    }
 }

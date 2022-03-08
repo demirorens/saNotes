@@ -1,20 +1,17 @@
 package com.sanotes.web.payload;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Setter
+@Getter
+@NoArgsConstructor
 public class ByIdRequest {
     private Long id;
-
-    public ByIdRequest() {
-    }
 
     public ByIdRequest(Long id) {
         this.id = id;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 }
