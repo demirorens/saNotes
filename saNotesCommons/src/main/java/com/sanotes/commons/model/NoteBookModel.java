@@ -52,11 +52,6 @@ public class NoteBookModel extends UserAudit {
         this.description = description;
     }
 
-    public NoteBookModel(Long noteBookId) {
-        this.id = noteBookId;
-    }
-
-
     @JsonBackReference
     public User getUser() {
         return user;

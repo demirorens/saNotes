@@ -98,6 +98,24 @@ class NoteBookControllerTest {
     }
 
     @Test
+    @Order(1)
+    void addNoteBook_Unauthorized() throws Exception {
+        MockHttpServletRequestBuilder request = post("/api/v1/noteBook")
+                .header("Authorization", "Bearer " + accessToken);
+        request.content(mapper.writeValueAsString(new NoteBookRequest("sample", "sample notebook")));
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        MockHttpServletResponse response = mockMvc.perform(request)
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.id").value(greaterThan(0)))
+                .andExpect(jsonPath("$.name").value("sample"))
+                .andExpect(jsonPath("$.description").value("sample notebook"))
+                .andReturn().getResponse();
+        JSONObject jsonObject = new JSONObject(response.getContentAsString());
+        noteBook.setId(Long.valueOf(jsonObject.get("id") + ""));
+    }
+
+    @Test
     @Order(2)
     void updateNoteBook() throws Exception {
         MockHttpServletRequestBuilder request = put("/api/v1/noteBook")

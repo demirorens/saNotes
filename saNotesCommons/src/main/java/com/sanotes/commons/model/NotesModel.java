@@ -50,25 +50,6 @@ public class NotesModel extends UserAudit {
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
     private List<TagModel> tags;
 
-    public NotesModel(Long id, String noteId, String topic, String text, NoteBookModel notebook) {
-        this.id = id;
-        this.noteId = noteId;
-        this.topic = topic;
-        this.text = text;
-        this.notebook = notebook;
-    }
-
-    public NotesModel(String topic, String text) {
-        this.topic = topic;
-        this.text = text;
-    }
-
-    public NotesModel(Long id, String topic, String text) {
-        this.topic = topic;
-        this.text = text;
-        this.id = id;
-    }
-
     @JsonBackReference
     public NoteBookModel getNotebook() {
         return notebook;

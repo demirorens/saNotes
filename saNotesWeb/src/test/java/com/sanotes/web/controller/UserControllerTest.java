@@ -160,6 +160,18 @@ class UserControllerTest {
 
     @Test
     @Order(5)
+    void getUserItems() throws Exception {
+        MockHttpServletRequestBuilder request =
+                get("/api/v1/user//{username}/getUserItems", username)
+                        .header("Authorization", "Bearer " + accessToken);
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mockMvc.perform(request)
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    @Order(6)
     void deleteUser() throws Exception {
         MockHttpServletRequestBuilder request =
                 delete("/api/v1/user/{username}", usernameTest)
@@ -173,6 +185,7 @@ class UserControllerTest {
 
     @AfterAll
     void cleanup() throws Exception {
+        userService.removeAdmin(username);
         MockHttpServletRequestBuilder request =
                 delete("/api/v1/user/{username}", username)
                         .header("Authorization", "Bearer " + accessToken);
