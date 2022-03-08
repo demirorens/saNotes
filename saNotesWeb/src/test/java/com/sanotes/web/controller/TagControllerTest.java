@@ -119,6 +119,23 @@ class TagControllerTest {
 
     @Test
     @Order(3)
+    void updateTagUnExist() throws Exception {
+        MockHttpServletRequestBuilder request = put("/api/v1/tag")
+                .header("Authorization", "Bearer " + accessToken);
+        tagResponse.setName("update");
+        tagResponse.setDescription("update tag");
+        long temp = tagResponse.getId();
+        tagResponse.setId(0l);
+        request.content(mapper.writeValueAsString(tagResponse));
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mockMvc.perform(request)
+                .andExpect(status().is4xxClientError());
+        tagResponse.setId(temp);
+    }
+
+    @Test
+    @Order(4)
     void getTagNotes() throws Exception {
         /*Inserting a notebook*/
         MockHttpServletRequestBuilder request = post("/api/v1/noteBook")
@@ -158,7 +175,19 @@ class TagControllerTest {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
+    void getTagNotesUnExist() throws Exception {
+        MockHttpServletRequestBuilder request = get("/api/v1/tag/notes")
+                .header("Authorization", "Bearer " + accessToken);
+        request.param("id", String.valueOf(0));
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mockMvc.perform(request)
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @Order(5)
     void deleteTag() throws Exception {
         MockHttpServletRequestBuilder request = delete("/api/v1/tag")
                 .header("Authorization", "Bearer " + accessToken);
@@ -168,6 +197,18 @@ class TagControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.success").value(true));
+    }
+
+    @Test
+    @Order(6)
+    void deleteTagUnExist() throws Exception {
+        MockHttpServletRequestBuilder request = delete("/api/v1/tag")
+                .header("Authorization", "Bearer " + accessToken);
+        request.content(mapper.writeValueAsString(new ByIdRequest(0l)));
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mockMvc.perform(request)
+                .andExpect(status().is4xxClientError());
     }
 
     @AfterAll

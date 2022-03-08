@@ -97,6 +97,7 @@ class NotesControllerTest {
         noteRequest = new NoteRequest(Long.valueOf(jsonObject.get("id") + ""), "sample", "sample note");
     }
 
+
     @Test
     @Order(1)
     void addNote() throws Exception {
@@ -117,6 +118,7 @@ class NotesControllerTest {
         noteRequest.setId(Long.valueOf(jsonObject.get("id") + ""));
         noteRequest.setNoteId(jsonObject.get("noteId") + "");
     }
+
 
     @Test
     @Order(2)

@@ -98,8 +98,8 @@ class NoteBookControllerTest {
     }
 
     @Test
-    @Order(1)
-    void addNoteBook_Unauthorized() throws Exception {
+    @Order(2)
+    void addNoteBookUnauthorized() throws Exception {
         MockHttpServletRequestBuilder request = post("/api/v1/noteBook")
                 .header("Authorization", "Bearer " + accessToken);
         request.content(mapper.writeValueAsString(new NoteBookRequest("sample", "sample notebook")));
@@ -116,7 +116,7 @@ class NoteBookControllerTest {
     }
 
     @Test
-    @Order(2)
+    @Order(3)
     void updateNoteBook() throws Exception {
         MockHttpServletRequestBuilder request = put("/api/v1/noteBook")
                 .header("Authorization", "Bearer " + accessToken);
@@ -133,7 +133,24 @@ class NoteBookControllerTest {
     }
 
     @Test
-    @Order(3)
+    @Order(4)
+    void updateNoteBookUnExist() throws Exception {
+        MockHttpServletRequestBuilder request = put("/api/v1/noteBook")
+                .header("Authorization", "Bearer " + accessToken);
+        noteBook.setName("update");
+        noteBook.setDescription("update notebook");
+        long temp = noteBook.getId();
+        noteBook.setId(0l);
+        request.content(mapper.writeValueAsString(noteBook));
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mockMvc.perform(request)
+                .andExpect(status().is4xxClientError());
+        noteBook.setId(temp);
+    }
+
+    @Test
+    @Order(5)
     void getNoteBookNotes() throws Exception {
         /*Inserting a note to the notebook*/
         MockHttpServletRequestBuilder request = post("/api/v1/note")
@@ -159,7 +176,19 @@ class NoteBookControllerTest {
     }
 
     @Test
-    @Order(4)
+    @Order(6)
+    void getNoteBookNotesUnExist() throws Exception {
+        MockHttpServletRequestBuilder request = get("/api/v1/noteBook/notes")
+                .header("Authorization", "Bearer " + accessToken);
+        request.param("id", String.valueOf(0));
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mockMvc.perform(request)
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @Order(7)
     void deleteNoteBook() throws Exception {
         MockHttpServletRequestBuilder request = delete("/api/v1/noteBook")
                 .header("Authorization", "Bearer " + accessToken);
@@ -169,6 +198,18 @@ class NoteBookControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.success").value(true));
+    }
+
+    @Test
+    @Order(8)
+    void deleteNoteBookUnExist() throws Exception {
+        MockHttpServletRequestBuilder request = delete("/api/v1/noteBook")
+                .header("Authorization", "Bearer " + accessToken);
+        request.content(mapper.writeValueAsString(new ByIdRequest(0l)));
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mockMvc.perform(request)
+                .andExpect(status().is4xxClientError());
     }
 
     @AfterAll

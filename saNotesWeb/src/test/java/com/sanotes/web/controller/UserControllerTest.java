@@ -141,6 +141,38 @@ class UserControllerTest {
 
     @Test
     @Order(4)
+    void addUserWithExistingUserName() throws Exception {
+        MockHttpServletRequestBuilder request =
+                post("/api/v1/user")
+                        .header("Authorization", "Bearer " + accessToken);
+        request.content(mapper.writeValueAsString(
+                new UserRequest("firstName", "lastName",
+                        username, "password",
+                        usernameTest + "@gmail.com")));
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mockMvc.perform(request)
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @Order(5)
+    void addUserWithExistingMail() throws Exception {
+        MockHttpServletRequestBuilder request =
+                post("/api/v1/user")
+                        .header("Authorization", "Bearer " + accessToken);
+        request.content(mapper.writeValueAsString(
+                new UserRequest("firstName", "lastName",
+                        usernameTest, "password",
+                        username + "@gmail.com")));
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mockMvc.perform(request)
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @Order(6)
     void updateUser() throws Exception {
         MockHttpServletRequestBuilder request =
                 put("/api/v1/user/{username}", usernameTest)
@@ -158,8 +190,9 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.lastname").value("lastNameNew"));
     }
 
+
     @Test
-    @Order(5)
+    @Order(7)
     void getUserItems() throws Exception {
         MockHttpServletRequestBuilder request =
                 get("/api/v1/user//{username}/getUserItems", username)
@@ -171,7 +204,7 @@ class UserControllerTest {
     }
 
     @Test
-    @Order(6)
+    @Order(8)
     void deleteUser() throws Exception {
         MockHttpServletRequestBuilder request =
                 delete("/api/v1/user/{username}", usernameTest)
