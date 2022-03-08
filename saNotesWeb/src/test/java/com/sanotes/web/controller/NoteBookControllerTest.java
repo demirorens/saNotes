@@ -44,7 +44,9 @@ class NoteBookControllerTest {
             new MediaType("application", "json", StandardCharsets.UTF_8);
 
     private static final String username = "testuser" + Instant.now().getEpochSecond();
+    private static final String otherUsername = "testuser2" + Instant.now().getEpochSecond();
     private String accessToken;
+    private String otherAccessToken;
 
     @BeforeAll
     void setUp() throws Exception {
@@ -59,7 +61,10 @@ class NoteBookControllerTest {
 
         /* Signing up a test user*/
         MockHttpServletRequestBuilder request = post("/api/v1/auth/signup");
-        request.content(mapper.writeValueAsString(new SignUpRequest("firstName", "lastName", username, "password", username + "@gmail.com")));
+        request.content(mapper.writeValueAsString(
+                new SignUpRequest("firstName",
+                        "lastName", username,
+                        "password", username + "@gmail.com")));
         request.accept(MEDIA_TYPE_JSON_UTF8);
         request.contentType(MEDIA_TYPE_JSON_UTF8);
         mockMvc.perform(request)
@@ -76,6 +81,29 @@ class NoteBookControllerTest {
                 .andReturn().getResponse();
         JSONObject jsonObject = new JSONObject(response.getContentAsString());
         accessToken = jsonObject.get("accessToken") + "";
+
+        /* Signing up a other test user*/
+        request = post("/api/v1/auth/signup");
+        request.content(mapper.writeValueAsString(
+                new SignUpRequest("firstName",
+                        "lastName", otherUsername, "password",
+                        otherUsername + "@gmail.com")));
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mockMvc.perform(request)
+                .andExpect(status().is2xxSuccessful());
+
+        /* Login and get token for other test user*/
+        request = post("/api/v1/auth/login");
+        request.content(mapper.writeValueAsString(new LoginRequest(otherUsername, "password")));
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        response = mockMvc.perform(request)
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.accessToken").exists())
+                .andReturn().getResponse();
+        jsonObject = new JSONObject(response.getContentAsString());
+        otherAccessToken = jsonObject.get("accessToken") + "";
 
     }
 
@@ -99,20 +127,16 @@ class NoteBookControllerTest {
 
     @Test
     @Order(2)
-    void addNoteBookUnauthorized() throws Exception {
-        MockHttpServletRequestBuilder request = post("/api/v1/noteBook")
-                .header("Authorization", "Bearer " + accessToken);
-        request.content(mapper.writeValueAsString(new NoteBookRequest("sample", "sample notebook")));
+    void updateNoteBookUnauthorized() throws Exception {
+        MockHttpServletRequestBuilder request = put("/api/v1/noteBook")
+                .header("Authorization", "Bearer " + otherAccessToken);
+        noteBook.setName("update");
+        noteBook.setDescription("update notebook");
+        request.content(mapper.writeValueAsString(noteBook));
         request.accept(MEDIA_TYPE_JSON_UTF8);
         request.contentType(MEDIA_TYPE_JSON_UTF8);
-        MockHttpServletResponse response = mockMvc.perform(request)
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$.id").value(greaterThan(0)))
-                .andExpect(jsonPath("$.name").value("sample"))
-                .andExpect(jsonPath("$.description").value("sample notebook"))
-                .andReturn().getResponse();
-        JSONObject jsonObject = new JSONObject(response.getContentAsString());
-        noteBook.setId(Long.valueOf(jsonObject.get("id") + ""));
+        mockMvc.perform(request)
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -189,6 +213,30 @@ class NoteBookControllerTest {
 
     @Test
     @Order(7)
+    void getNoteBookNotesUnauthorized() throws Exception {
+        MockHttpServletRequestBuilder request = get("/api/v1/noteBook/notes")
+                .header("Authorization", "Bearer " + otherAccessToken);
+        request.param("id", String.valueOf(noteBook.getId()));
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mockMvc.perform(request)
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @Order(10)
+    void deleteNoteBookUnAuthorized() throws Exception {
+        MockHttpServletRequestBuilder request = delete("/api/v1/noteBook")
+                .header("Authorization", "Bearer " + otherAccessToken);
+        request.content(mapper.writeValueAsString(new ByIdRequest(noteBook.getId())));
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mockMvc.perform(request)
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @Order(8)
     void deleteNoteBook() throws Exception {
         MockHttpServletRequestBuilder request = delete("/api/v1/noteBook")
                 .header("Authorization", "Bearer " + accessToken);
@@ -201,16 +249,17 @@ class NoteBookControllerTest {
     }
 
     @Test
-    @Order(8)
+    @Order(9)
     void deleteNoteBookUnExist() throws Exception {
         MockHttpServletRequestBuilder request = delete("/api/v1/noteBook")
                 .header("Authorization", "Bearer " + accessToken);
-        request.content(mapper.writeValueAsString(new ByIdRequest(0l)));
+        request.content(mapper.writeValueAsString(new ByIdRequest(noteBook.getId())));
         request.accept(MEDIA_TYPE_JSON_UTF8);
         request.contentType(MEDIA_TYPE_JSON_UTF8);
         mockMvc.perform(request)
                 .andExpect(status().is4xxClientError());
     }
+
 
     @AfterAll
     void cleanup() throws Exception {

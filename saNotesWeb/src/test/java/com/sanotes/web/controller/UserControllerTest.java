@@ -119,6 +119,38 @@ class UserControllerTest {
 
     @Test
     @Order(3)
+    void addUserWithExistingUserName() throws Exception {
+        MockHttpServletRequestBuilder request =
+                post("/api/v1/user")
+                        .header("Authorization", "Bearer " + accessToken);
+        request.content(mapper.writeValueAsString(
+                new UserRequest("firstName", "lastName",
+                        username, "password",
+                        usernameTest + "@gmail.com")));
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mockMvc.perform(request)
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @Order(4)
+    void addUserWithExistingMail() throws Exception {
+        MockHttpServletRequestBuilder request =
+                post("/api/v1/user")
+                        .header("Authorization", "Bearer " + accessToken);
+        request.content(mapper.writeValueAsString(
+                new UserRequest("firstName", "lastName",
+                        usernameTest, "password",
+                        username + "@gmail.com")));
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mockMvc.perform(request)
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @Order(5)
     void addUser() throws Exception {
         MockHttpServletRequestBuilder request =
                 post("/api/v1/user")
@@ -139,37 +171,6 @@ class UserControllerTest {
         userRequest.setId(Long.valueOf(jsonObject.get("id") + ""));
     }
 
-    @Test
-    @Order(4)
-    void addUserWithExistingUserName() throws Exception {
-        MockHttpServletRequestBuilder request =
-                post("/api/v1/user")
-                        .header("Authorization", "Bearer " + accessToken);
-        request.content(mapper.writeValueAsString(
-                new UserRequest("firstName", "lastName",
-                        username, "password",
-                        usernameTest + "@gmail.com")));
-        request.accept(MEDIA_TYPE_JSON_UTF8);
-        request.contentType(MEDIA_TYPE_JSON_UTF8);
-        mockMvc.perform(request)
-                .andExpect(status().is4xxClientError());
-    }
-
-    @Test
-    @Order(5)
-    void addUserWithExistingMail() throws Exception {
-        MockHttpServletRequestBuilder request =
-                post("/api/v1/user")
-                        .header("Authorization", "Bearer " + accessToken);
-        request.content(mapper.writeValueAsString(
-                new UserRequest("firstName", "lastName",
-                        usernameTest, "password",
-                        username + "@gmail.com")));
-        request.accept(MEDIA_TYPE_JSON_UTF8);
-        request.contentType(MEDIA_TYPE_JSON_UTF8);
-        mockMvc.perform(request)
-                .andExpect(status().is4xxClientError());
-    }
 
     @Test
     @Order(6)
@@ -190,9 +191,25 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.lastname").value("lastNameNew"));
     }
 
-
     @Test
     @Order(7)
+    void updateUserUnExist() throws Exception {
+        MockHttpServletRequestBuilder request =
+                put("/api/v1/user/{username}", "unExistedUser")
+                        .header("Authorization", "Bearer " + accessToken);
+        request.content(mapper.writeValueAsString(
+                new UserRequest("firstNameNew", "lastNameNew",
+                        usernameTest, "passwordNew",
+                        usernameTest + "@gmail.com")));
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mockMvc.perform(request)
+                .andExpect(status().is4xxClientError());
+    }
+
+
+    @Test
+    @Order(8)
     void getUserItems() throws Exception {
         MockHttpServletRequestBuilder request =
                 get("/api/v1/user//{username}/getUserItems", username)
@@ -204,7 +221,19 @@ class UserControllerTest {
     }
 
     @Test
-    @Order(8)
+    @Order(9)
+    void getUserItemsUnExist() throws Exception {
+        MockHttpServletRequestBuilder request =
+                get("/api/v1/user//{username}/getUserItems", "unExistedUser")
+                        .header("Authorization", "Bearer " + accessToken);
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mockMvc.perform(request)
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @Order(10)
     void deleteUser() throws Exception {
         MockHttpServletRequestBuilder request =
                 delete("/api/v1/user/{username}", usernameTest)
@@ -214,6 +243,18 @@ class UserControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.success").value(true));
+    }
+
+    @Test
+    @Order(11)
+    void deleteUserUnExist() throws Exception {
+        MockHttpServletRequestBuilder request =
+                delete("/api/v1/user/{username}", "unExistedUser")
+                        .header("Authorization", "Bearer " + accessToken);
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mockMvc.perform(request)
+                .andExpect(status().is4xxClientError());
     }
 
     @AfterAll

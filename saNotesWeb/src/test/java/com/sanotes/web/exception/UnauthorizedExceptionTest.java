@@ -15,7 +15,7 @@ class UnauthorizedExceptionTest {
             throw new UnauthorizedException(new ApiResponse(false, "exception", HttpStatus.UNAUTHORIZED));
         } catch (Exception e) {
             assertTrue(e instanceof UnauthorizedException);
-            assertEquals(e.getMessage(), "exception");
+            assertEquals("exception", e.getMessage());
         }
     }
 
@@ -25,7 +25,7 @@ class UnauthorizedExceptionTest {
             throw new UnauthorizedException("exception");
         } catch (Exception e) {
             assertTrue(e instanceof UnauthorizedException);
-            assertEquals(e.getMessage(), "exception");
+            assertEquals("exception", e.getMessage());
         }
     }
 

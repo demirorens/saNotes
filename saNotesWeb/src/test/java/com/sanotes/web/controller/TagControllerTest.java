@@ -47,7 +47,9 @@ class TagControllerTest {
             new MediaType("application", "json", StandardCharsets.UTF_8);
 
     private static final String username = "testuser" + Instant.now().getEpochSecond();
+    private static final String otherUsername = "testuser2" + Instant.now().getEpochSecond();
     private String accessToken;
+    private String otherAccessToken;
 
     @BeforeAll
     void setUp() throws Exception {
@@ -79,6 +81,29 @@ class TagControllerTest {
                 .andReturn().getResponse();
         JSONObject jsonObject = new JSONObject(response.getContentAsString());
         accessToken = jsonObject.get("accessToken") + "";
+
+        /* Signing up a other test user*/
+        request = post("/api/v1/auth/signup");
+        request.content(mapper.writeValueAsString(
+                new SignUpRequest("firstName",
+                        "lastName", otherUsername, "password",
+                        otherUsername + "@gmail.com")));
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mockMvc.perform(request)
+                .andExpect(status().is2xxSuccessful());
+
+        /* Login and get token for other test user*/
+        request = post("/api/v1/auth/login");
+        request.content(mapper.writeValueAsString(new LoginRequest(otherUsername, "password")));
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        response = mockMvc.perform(request)
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.accessToken").exists())
+                .andReturn().getResponse();
+        jsonObject = new JSONObject(response.getContentAsString());
+        otherAccessToken = jsonObject.get("accessToken") + "";
 
     }
 
@@ -136,6 +161,20 @@ class TagControllerTest {
 
     @Test
     @Order(4)
+    void updateTagUnAuthorized() throws Exception {
+        MockHttpServletRequestBuilder request = put("/api/v1/tag")
+                .header("Authorization", "Bearer " + otherAccessToken);
+        tagResponse.setName("update");
+        tagResponse.setDescription("update tag");
+        request.content(mapper.writeValueAsString(tagResponse));
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mockMvc.perform(request)
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @Order(5)
     void getTagNotes() throws Exception {
         /*Inserting a notebook*/
         MockHttpServletRequestBuilder request = post("/api/v1/noteBook")
@@ -175,7 +214,7 @@ class TagControllerTest {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     void getTagNotesUnExist() throws Exception {
         MockHttpServletRequestBuilder request = get("/api/v1/tag/notes")
                 .header("Authorization", "Bearer " + accessToken);
@@ -187,7 +226,31 @@ class TagControllerTest {
     }
 
     @Test
-    @Order(5)
+    @Order(7)
+    void getTagNotesUnAuthorized() throws Exception {
+        MockHttpServletRequestBuilder request = get("/api/v1/tag/notes")
+                .header("Authorization", "Bearer " + otherAccessToken);
+        request.param("id", String.valueOf(tagResponse.getId()));
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mockMvc.perform(request)
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @Order(8)
+    void deleteTagUnAuthorized() throws Exception {
+        MockHttpServletRequestBuilder request = delete("/api/v1/tag")
+                .header("Authorization", "Bearer " + otherAccessToken);
+        request.content(mapper.writeValueAsString(new ByIdRequest(tagResponse.getId())));
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mockMvc.perform(request)
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @Order(9)
     void deleteTag() throws Exception {
         MockHttpServletRequestBuilder request = delete("/api/v1/tag")
                 .header("Authorization", "Bearer " + accessToken);
@@ -200,7 +263,7 @@ class TagControllerTest {
     }
 
     @Test
-    @Order(6)
+    @Order(10)
     void deleteTagUnExist() throws Exception {
         MockHttpServletRequestBuilder request = delete("/api/v1/tag")
                 .header("Authorization", "Bearer " + accessToken);

@@ -13,7 +13,7 @@ class SANotesExceptionTest {
             throw new SANotesException("exception");
         } catch (Exception e) {
             assertTrue(e instanceof SANotesException);
-            assertEquals(e.getMessage(), "exception");
+            assertEquals("exception", e.getMessage());
         }
     }
 

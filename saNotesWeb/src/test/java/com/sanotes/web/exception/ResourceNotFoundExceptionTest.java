@@ -13,7 +13,7 @@ class ResourceNotFoundExceptionTest {
             throw new ResourceNotFoundException("resourceName", "fieldName", "fieldValue");
         } catch (Exception e) {
             assertTrue(e instanceof ResourceNotFoundException);
-            assertEquals(((ResourceNotFoundException) e).getResourceName(), "resourceName");
+            assertEquals("resourceName", ((ResourceNotFoundException) e).getResourceName());
         }
     }
 
