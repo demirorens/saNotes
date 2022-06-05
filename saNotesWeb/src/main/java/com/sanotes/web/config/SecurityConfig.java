@@ -62,6 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/v1/user/isEmailAvailable").permitAll()
                 .anyRequest().authenticated();
         httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
     }
 
 
