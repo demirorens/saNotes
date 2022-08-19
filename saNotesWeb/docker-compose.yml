@@ -19,6 +19,8 @@ services:
       retries: 10
     volumes:
       - sanotes-postgres-db-data:/var/lib/postgresql/data
+
+
   mongo:
     image: mongo:latest
     container_name: sanotes-mongo-db
@@ -31,6 +33,8 @@ services:
       - sanotes-network
     volumes:
       - sanotes-mongo-db-data:/var/lib/mongo/data
+
+
   application:
     container_name: sanotes-application
     build:
@@ -51,6 +55,8 @@ services:
     depends_on:
       - "db"
       - "mongo"
+
+
 networks:
   sanotes-network:
     name: sanotes-network
